@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Reviewer Hub</title>
+<title>GameDev Reviewer — Platforms, Modes, Goals &amp; Genres</title>
 <style>
   :root{
     --bg:#EAEDF5;
@@ -17,6 +17,12 @@
     --accent:#4B3BD6;
     --accent-ink:#FFFFFF;
     --accent-soft:#EBE8FC;
+    --ok:#0B7A57;
+    --ok-soft:#E0F2EA;
+    --ok-line:#8FD3BB;
+    --no:#B62F47;
+    --no-soft:#FBE7EB;
+    --no-line:#EDA7B4;
     --shadow:0 1px 2px rgba(20,24,50,.06), 0 12px 28px -14px rgba(20,24,50,.28);
   }
   html[data-theme="dark"]{
@@ -31,6 +37,12 @@
     --accent:#9E8FFF;
     --accent-ink:#14101F;
     --accent-soft:#221E3B;
+    --ok:#4CCB9C;
+    --ok-soft:#10261F;
+    --ok-line:#255A48;
+    --no:#FF8095;
+    --no-soft:#2A1219;
+    --no-line:#5C2733;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 18px 34px -18px rgba(0,0,0,.8);
   }
 
@@ -50,12 +62,21 @@
   }
   .wrap{max-width:600px;margin:0 auto;}
 
+  /* ---------- header ---------- */
   header{
     display:flex;align-items:flex-start;gap:12px;
     padding:22px 2px 18px;
   }
   .mark{flex:none;width:34px;height:34px;color:var(--accent);margin-top:2px;}
   .titles{flex:1;min-width:0;}
+  .back-link{
+    display:inline-block;
+    font-size:.75rem;font-weight:650;
+    color:var(--faint);text-decoration:none;
+    margin-bottom:5px;
+    transition:color .15s ease;
+  }
+  .back-link:hover{color:var(--accent);}
   h1{
     margin:0;
     font-size:1.5rem;
@@ -83,59 +104,178 @@
   .theme-btn:hover{color:var(--accent);border-color:var(--line-strong);}
   .theme-btn svg{width:17px;height:17px;}
 
+  /* ---------- card ---------- */
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .pad{padding:22px;}
+  @media (max-width:420px){ .pad{padding:18px;} }
+
+  /* ---------- start screen ---------- */
   .lede{
-    margin:2px 2px 18px;
+    margin:0 0 20px;
     font-size:.9375rem;
     color:var(--muted);
     max-width:46ch;
   }
-
   .deck{display:grid;gap:10px;}
-  .deck-link{
+  .deck-btn{
     display:flex;align-items:center;gap:14px;
-    padding:16px 17px;
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:18px;
-    box-shadow:var(--shadow);
-    text-decoration:none;
-    color:inherit;
-    transition:border-color .15s ease, transform .15s ease;
+    width:100%;text-align:left;
+    padding:15px 16px;
+    background:transparent;
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    color:inherit;font:inherit;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
   }
-  .deck-link:hover{border-color:var(--accent);}
-  .deck-link:active{transform:scale(.99);}
-  .deck-icon{
-    flex:none;
-    width:44px;height:44px;
-    border-radius:13px;
-    background:var(--accent-soft);
-    color:var(--accent);
-    display:grid;place-items:center;
-  }
-  .deck-icon svg{width:22px;height:22px;}
-  .deck-body{flex:1;min-width:0;}
-  .deck-t{display:block;font-weight:700;font-size:1rem;letter-spacing:-.01em;}
-  .deck-d{display:block;font-size:.8125rem;color:var(--muted);margin-top:2px;line-height:1.4;}
+  .deck-btn:hover{border-color:var(--accent);background:var(--accent-soft);}
   .deck-n{
     flex:none;
-    font-size:.75rem;font-weight:700;
-    color:var(--faint);
-    font-variant-numeric:tabular-nums;
-    white-space:nowrap;
-  }
-  .chev{flex:none;width:16px;height:16px;color:var(--faint);}
-
-  .empty-note{
-    margin-top:18px;
-    padding:16px 17px;
-    border:1.5px dashed var(--line-strong);
-    border-radius:18px;
-    font-size:.8125rem;
-    color:var(--faint);
+    min-width:34px;
     text-align:center;
+    font-size:1.0625rem;
+    font-weight:800;
+    color:var(--accent);
+    font-variant-numeric:tabular-nums;
+    letter-spacing:-.02em;
+  }
+  .deck-t{display:block;font-weight:650;font-size:.9375rem;}
+  .deck-d{display:block;font-size:.8125rem;color:var(--muted);margin-top:3px;line-height:1.4;}
+  .opts-row{
+    display:flex;align-items:center;gap:9px;
+    margin-top:18px;font-size:.8125rem;color:var(--muted);
+    cursor:pointer;user-select:none;
+  }
+  .opts-row input{accent-color:var(--accent);width:16px;height:16px;cursor:pointer;}
+
+  /* ---------- quiz meta ---------- */
+  .meta{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-size:.8125rem;color:var(--muted);
+    font-variant-numeric:tabular-nums;
+  }
+  .meta b{color:var(--ink);font-weight:650;}
+  .rail{
+    height:5px;border-radius:99px;background:var(--line);
+    margin:11px 0 20px;overflow:hidden;
+  }
+  .rail span{
+    display:block;height:100%;width:0;border-radius:99px;
+    background:var(--accent);
+    transition:width .32s cubic-bezier(.4,0,.2,1);
+  }
+  .badge{
+    display:inline-block;
+    padding:4px 11px;border-radius:99px;
+    background:var(--accent-soft);color:var(--accent);
+    font-size:.6875rem;font-weight:700;letter-spacing:.04em;
+    margin-bottom:14px;
+  }
+  .qtext{
+    margin:0 0 18px;
+    font-size:1.1875rem;
+    font-weight:700;
+    letter-spacing:-.012em;
+    line-height:1.34;
   }
 
-  footer{text-align:center;margin:22px 0 0;font-size:.75rem;color:var(--faint);}
+  /* ---------- options ---------- */
+  .choices{display:grid;gap:9px;}
+  .choice{
+    display:flex;align-items:flex-start;gap:12px;
+    width:100%;text-align:left;
+    padding:13px 14px;
+    background:transparent;
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    color:inherit;
+    font:inherit;font-size:.9375rem;line-height:1.42;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease, opacity .2s ease;
+  }
+  .choice:hover:not(:disabled){border-color:var(--line-strong);background:var(--bg2);}
+  .choice:disabled{cursor:default;}
+  .key{
+    flex:none;
+    width:24px;height:24px;margin-top:-1px;
+    display:grid;place-items:center;
+    border-radius:8px;
+    background:var(--line);
+    color:var(--muted);
+    font-size:.75rem;font-weight:700;
+    transition:background .15s ease,color .15s ease;
+  }
+  .choice.correct{border-color:var(--ok-line);background:var(--ok-soft);}
+  .choice.correct .key{background:var(--ok);color:var(--card);}
+  .choice.wrong{border-color:var(--no-line);background:var(--no-soft);}
+  .choice.wrong .key{background:var(--no);color:var(--card);}
+  .choice.dim{opacity:.42;}
+
+  /* ---------- feedback ---------- */
+  .fb{
+    margin-top:16px;padding:13px 15px;
+    border-left:3px solid var(--accent);
+    border-radius:0 12px 12px 0;
+    background:var(--bg2);
+    font-size:.875rem;line-height:1.55;
+    color:var(--muted);
+    animation:rise .22s ease-out;
+  }
+  .fb.good{border-left-color:var(--ok);}
+  .fb.bad{border-left-color:var(--no);}
+  .fb strong{display:block;color:var(--ink);font-weight:700;margin-bottom:3px;font-size:.9375rem;}
+  @keyframes rise{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+
+  /* ---------- buttons ---------- */
+  .actions{display:flex;gap:10px;margin-top:18px;}
+  .btn{
+    flex:1;
+    padding:13px 18px;
+    border-radius:13px;border:1.5px solid transparent;
+    font:inherit;font-size:.9375rem;font-weight:650;
+    cursor:pointer;
+    transition:filter .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .btn-primary{background:var(--accent);color:var(--accent-ink);}
+  .btn-primary:hover{filter:brightness(1.08);}
+  .btn-ghost{background:transparent;color:var(--muted);border-color:var(--line);}
+  .btn-ghost:hover{border-color:var(--line-strong);color:var(--ink);}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  /* ---------- results ---------- */
+  .score-big{
+    font-size:3.25rem;font-weight:800;letter-spacing:-.04em;line-height:1;
+    font-variant-numeric:tabular-nums;
+  }
+  .score-of{font-size:1.125rem;color:var(--faint);font-weight:600;}
+  .verdict{margin:10px 0 0;color:var(--muted);font-size:.9375rem;max-width:44ch;}
+  .missed{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;}
+  .missed h3{margin:0 0 12px;font-size:.875rem;font-weight:700;color:var(--muted);}
+  .miss{padding:12px 0;border-bottom:1px solid var(--line);font-size:.875rem;}
+  .miss:last-child{border-bottom:0;}
+  .miss p{margin:0 0 5px;font-weight:650;line-height:1.4;}
+  .miss .yours{color:var(--no);}
+  .miss .right{color:var(--ok);}
+  .miss span{display:block;line-height:1.45;}
+
+  .hint{
+    text-align:center;margin:16px 0 0;
+    font-size:.75rem;color:var(--faint);
+  }
+  .hint kbd{
+    font-family:inherit;font-size:.6875rem;font-weight:700;
+    border:1px solid var(--line-strong);border-radius:5px;
+    padding:1px 5px;color:var(--muted);
+  }
+  @media (max-width:640px){ .hint.keys{display:none;} }
+  footer{text-align:center;margin:18px 0 0;font-size:.75rem;color:var(--faint);}
+  .hide{display:none !important;}
 
   @media (prefers-reduced-motion:reduce){
     *{animation:none !important;transition:none !important;}
@@ -147,70 +287,364 @@
 
   <header>
     <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      <rect x="2" y="7" width="20" height="12" rx="5"/>
+      <path d="M7 11v4M5 13h4M15.5 12.5h.01M18 15h.01"/>
     </svg>
     <div class="titles">
-      <h1>Reviewer Hub</h1>
-      <p class="sub">Pick a subject to start reviewing</p>
+      <a href="../" class="back-link">&larr; All reviewers</a>
+      <h1>GameDev Reviewer</h1>
+      <p class="sub">Platforms &amp; Player Modes + Goals &amp; Genres</p>
     </div>
     <button class="theme-btn" id="themeBtn" aria-label="Switch to dark mode" title="Switch theme">
       <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
     </button>
   </header>
 
-  <p class="lede">Every reviewer works offline once the page has loaded. Tap a subject to jump in.</p>
+  <!-- ===== START ===== -->
+  <section class="card hide" id="startScreen">
+    <div class="pad">
+      <p class="lede">Pick a set and answer as you go. You get the reason for every answer right after you tap, so a wrong one still teaches you something.</p>
+      <div class="deck">
+        <button class="deck-btn" data-mod="all">
+          <span class="deck-n" id="cAll">0</span>
+          <span><span class="deck-t">Everything</span><span class="deck-d">Both handouts, mixed together</span></span>
+        </button>
+        <button class="deck-btn" data-mod="1">
+          <span class="deck-n" id="c1">0</span>
+          <span><span class="deck-t">Platforms &amp; Player Modes</span><span class="deck-d">Handout 1 — platforms, time intervals, player modes</span></span>
+        </button>
+        <button class="deck-btn" data-mod="2">
+          <span class="deck-n" id="c2">0</span>
+          <span><span class="deck-t">Goals &amp; Genres</span><span class="deck-d">Handout 2 — why games are made, and what kinds</span></span>
+        </button>
+      </div>
+      <label class="opts-row"><input type="checkbox" id="shuffleBox" checked> Shuffle the order each time</label>
+    </div>
+  </section>
 
-  <!-- ============================================================
-       Add a new subject: copy one <a class="deck-link"> block,
-       change the href to your new folder ("/newsubject/"), the
-       icon path if you like, and the title/description/count.
-       ============================================================ -->
-  <div class="deck">
+  <!-- ===== QUIZ ===== -->
+  <section class="card hide" id="quizScreen">
+    <div class="pad">
+      <div class="meta">
+        <span>Question <b id="qNow">1</b> / <span id="qTotal">0</span></span>
+        <span>Score <b id="score">0</b></span>
+      </div>
+      <div class="rail"><span id="railFill"></span></div>
+      <div class="badge" id="modBadge">Module 1</div>
+      <h2 class="qtext" id="qText">—</h2>
+      <div class="choices" id="choices"></div>
+      <div id="fbSlot"></div>
+      <div class="actions hide" id="nextRow">
+        <button class="btn btn-primary" id="nextBtn">Next question</button>
+      </div>
+    </div>
+  </section>
 
-    <a class="deck-link" href="gamedev/">
-      <span class="deck-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="7" width="20" height="12" rx="5"/>
-          <path d="M7 11v4M5 13h4M15.5 12.5h.01M18 15h.01"/>
-        </svg>
-      </span>
-      <span class="deck-body">
-        <span class="deck-t">Game Development Basics</span>
-        <span class="deck-d">Platforms &amp; player modes, goals &amp; genres</span>
-      </span>
-      <span class="deck-n">89 Q</span>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-    </a>
+  <!-- ===== RESULTS ===== -->
+  <section class="card hide" id="resultScreen">
+    <div class="pad">
+      <div><span class="score-big" id="finalScore">0</span><span class="score-of" id="finalOf"> / 0</span></div>
+      <p class="verdict" id="verdict"></p>
+      <div class="actions">
+        <button class="btn btn-primary" id="retryMissed">Retry the ones you missed</button>
+      </div>
+      <div class="actions" style="margin-top:10px">
+        <button class="btn btn-ghost" id="restartBtn">Back to the start</button>
+      </div>
+      <div class="missed hide" id="missedWrap">
+        <h3 id="missedTitle">What to go back over</h3>
+        <div id="missedList"></div>
+      </div>
+    </div>
+  </section>
 
-  </div>
-
-  <!-- Uncomment and show this instead if a deck array is ever empty
-  <div class="empty-note">No reviewers here yet.</div>
-  -->
-
+  <p class="hint keys" id="keyHint">Press <kbd>1</kbd>–<kbd>4</kbd> to answer, <kbd>Enter</kbd> to continue</p>
   <footer>Works offline. Nothing is sent anywhere.</footer>
 </div>
 
 <script>
-  const $ = id => document.getElementById(id);
-  const SUN = '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/>';
-  const MOON = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+/* =======================================================================
+   Question bank.  Authoring rule: o[0] is ALWAYS the correct answer.
+   The options get shuffled at runtime, so order here doesn't matter.
+   m = module (1 = Handout 1, 2 = Handout 2)
+   ======================================================================= */
+const BANK = [
 
-  function setTheme(t){
-    document.documentElement.setAttribute("data-theme", t);
-    $("themeIcon").innerHTML = t === "dark" ? SUN : MOON;
-    $("themeBtn").setAttribute("aria-label", t === "dark" ? "Switch to light mode" : "Switch to dark mode");
+/* ---------- MODULE 1: PLATFORMS ---------- */
+{m:1,q:"Which of these is NOT listed as a game platform?",o:["Virtual reality","Arcade","Handheld","Tabletop"],e:"The handout lists seven platforms: arcade, console, computer, online, handheld, mobile, and tabletop."},
+{m:1,q:"Where are arcade games found?",o:["Public venues such as malls and amusement parks","In the home, hooked up to a television","On local area networks in offices","Only on portable media players"],e:"Arcade games are stand-alone game systems placed in public venues."},
+{m:1,q:"How are most arcade games played?",o:["Standing up, using buttons, joysticks, or both","Seated, using a mouse and keyboard","Lying down with a headset","Seated, passing one controller around"],e:"Standing play with button and joystick controls is the arcade norm."},
+{m:1,q:"What does it mean that the console platform is proprietary?",o:["Hardware makers control what software is developed for their platforms","Consoles can only run games sold in the same country","Every console uses the same open standard","Only the player who bought the console may play it"],e:"Sony, Microsoft, and Nintendo decide what gets developed for their respective platforms."},
+{m:1,q:"Which companies are given as examples of console hardware manufacturers?",o:["Sony, Microsoft, and Nintendo","Sega, Atari, and Valve","Apple, Google, and Samsung","NASA, the Air Force, and the military"],e:"These three are named as the manufacturers controlling their proprietary platforms."},
+{m:1,q:"Why does the computer platform add complexity to development?",o:["Non-standard setups and a wide variety of systems","Games must be approved by a hardware maker first","Computers cannot connect to the Internet","Computer games must always be turn-based"],e:"Unlike a fixed console spec, every PC is different, which complicates development."},
+{m:1,q:"Where are console systems usually played?",o:["In the home, hooked up to a television set","In malls and amusement parks","On a local area network at school","On tables, using cards and dice"],e:"Console play is home play, connected to a TV."},
+{m:1,q:"Online games are played on which setup?",o:["A computer platform or a console system connected to the Internet","Stand-alone arcade cabinets only","Handheld devices with no connectivity","Pen-and-paper tabletop sessions"],e:"Online play runs on either a computer or an Internet-connected console."},
+{m:1,q:"What sometimes forces an online game's information to be stored on several servers?",o:["Thousands of simultaneous players","A subscription-based revenue model","The proprietary nature of consoles","The 90-second length of each session"],e:"The largest online games involve thousands of simultaneous players, which can require multiple servers."},
+{m:1,q:"A handheld gaming device has which built-in parts?",o:["A screen, game controls, and speakers","A joystick, coin slot, and marquee","A television output and a disc drive","A keyboard, mouse, and monitor"],e:"Handhelds are lightweight portable consoles with all three built in."},
+{m:1,q:"What makes handheld devices convenient?",o:["Their small size lets players take them almost anywhere","They are free to play in public venues","They store their data across several servers","They allow up to four players on one screen"],e:"Portability is the defining convenience of the handheld platform."},
+{m:1,q:"Mobile games are designed for which devices?",o:["Smartphones, tablets, and portable media players","Desktop computers and laptops","Arcade cabinets and coin-operated machines","Televisions and set-top boxes"],e:"Those three device types define the mobile platform."},
+{m:1,q:"What feature of mobile devices allows wireless multiplayer games?",o:["A wide range of connectivity features","Their proprietary operating systems","Their built-in coin mechanisms","Their non-standard hardware setups"],e:"Broad connectivity is what makes wireless multiplayer possible on mobile."},
+{m:1,q:"Dungeons and Dragons is used as an example of which platform?",o:["Tabletop","Online","Handheld","Console"],e:"It is cited as a pen-and-paper tabletop game, where the pieces are literally pens and paper."},
+{m:1,q:"Which games are included under the tabletop platform?",o:["Board, card, and dice games","Arcade cabinets and pinball machines","MMOs and MMORPGs","Exergames and rhythm games"],e:"Tabletop covers board, card, and dice games, plus pen-and-paper games."},
+
+/* ---------- MODULE 1: TIME INTERVALS ---------- */
+{m:1,q:"What are time intervals?",o:["Time-dependent elements that affect the pacing of the game","The loading times between game levels","The length of a game development cycle","The delay before a server responds"],e:"They are the time-dependent elements that set the game's pace."},
+{m:1,q:"A game's pacing affects whether it is played how?",o:["Reflexively or reflectively","Locally or online","Competitively or cooperatively","Vertically or horizontally"],e:"Fast pacing pushes reflexive play; slow pacing allows reflective thought."},
+{m:1,q:"How many basic time intervals are used in games?",o:["Three","Two","Four","Seven"],e:"Turn-based, real-time, and time-limited are the three basic intervals."},
+{m:1,q:"Which of these is NOT one of the three basic time intervals?",o:["Open-ended","Turn-based","Real-time","Time-limited"],e:"The three are turn-based, real-time, and time-limited."},
+{m:1,q:"In turn-based games, how much time is usually allotted for each turn?",o:["Unlimited","Exactly 90 seconds","One minute per player","Whatever the server allows"],e:"Turn time is usually unlimited, as in traditional board and card games."},
+{m:1,q:"What defines a real-time game?",o:["There is no time interval between turns — in fact, there are no turns at all","Each turn is capped at a fixed number of seconds","Players alternate turns as quickly as they can","The game pauses whenever a player thinks"],e:"Real-time is the opposite of turn-based: no turns exist."},
+{m:1,q:"Why are real-time games especially popular online?",o:["Players can communicate with each other in real-time","They require the least bandwidth","They are always free to play","They can be paused at any moment"],e:"Live communication with other players is part of the appeal."},
+{m:1,q:"A time-limited game is a compromise between which two?",o:["Turn-based and real-time games","Single-player and multiplayer games","Arcade and console games","Action and adventure games"],e:"It limits the time each player has for a turn, sitting between the two extremes."},
+{m:1,q:"In some single-player puzzle games, the time limit is placed on what?",o:["The game itself","Each individual puzzle piece","The other players' turns","The server session"],e:"Rather than limiting a turn, the limit applies to the whole game."},
+
+/* ---------- MODULE 1: PLAYER MODES ---------- */
+{m:1,q:"Player modes directly correlate to what?",o:["The number of people playing a game","The genre of the game","The platform the game runs on","The revenue model of the game"],e:"Player mode is defined by how many people are playing."},
+{m:1,q:"Which is NOT one of the listed player modes?",o:["Spectator mode","Two-player","LAN-based multiplayer","Local multiplayer"],e:"The modes listed are single player, two-player, local multiplayer, LAN-based multiplayer, and online multiplayer."},
+{m:1,q:"In a single-player game, what are the additional opponents called?",o:["AI characters or non-player characters (NPCs)","Second players","Coaches","Avatars"],e:"Any other characters in a single-player game are AI-controlled NPCs."},
+{m:1,q:"Two-player mode is also known as what?",o:["Head-to-head game","Split-screen game","Co-op game","Party game"],e:"Two players either face each other or team up against a common enemy."},
+{m:1,q:"Early in the industry, how did two players play together?",o:["They took turns playing against the game itself","They shared one controller simultaneously","They connected over a local area network","They played on separate screens over the Internet"],e:"Each player's experience was identical to single-player mode; they simply alternated."},
+{m:1,q:"In local multiplayer, what do all the players share?",o:["The same machine and screen, using separate input devices","A local area network but separate screens","An Internet connection across many servers","A single controller passed between them"],e:"Same space, same machine, same screen, separate controllers."},
+{m:1,q:"Console systems typically allow local play for up to how many players?",o:["Four","Two","Six","Eight"],e:"Local multiplayer on consoles commonly supports up to four players."},
+{m:1,q:"What is one effect of all players sharing one screen in local multiplayer?",o:["Each player can see what the other players are doing","Each player gets an unlimited turn","The game must be turn-based","Only one player can use a controller at a time"],e:"A shared screen means no hidden information between players."},
+{m:1,q:"LAN-based multiplayer lets players share a game without sharing what?",o:["The screen or the input device","The same building","The same game software","An Internet connection"],e:"That is the main difference from local multiplayer."},
+{m:1,q:"What did LAN-based games make possible?",o:["Combining the networking of online mainframe games with PCs placed in one local area","Streaming games from arcade cabinets to homes","Storing player data on several remote servers","Subscription-based monthly billing"],e:"LAN play merged mainframe-style networking with personal computers in one location."},
+{m:1,q:"In online multiplayer mode, how many players can share a game?",o:["Thousands, simultaneously","Up to four","Exactly two","Up to sixteen"],e:"Online multiplayer games can be played by thousands of players at the same time."},
+{m:1,q:"How long does an MMORPG persist each day?",o:["24 hours","Only during peak hours","Eight hours","As long as one player is online"],e:"MMORPGs run around the clock."},
+{m:1,q:"Which revenue model is associated with MMORPGs in the handout?",o:["Subscription-based, with players paying a monthly fee","One-time purchase of a disc","Advertising revenue from advergames","Pay-per-turn micropayments"],e:"Players pay a monthly fee to keep playing."},
+
+/* ---------- MODULE 2: GOALS ---------- */
+{m:2,q:"Which of these is NOT listed as a purpose for developing games?",o:["Localization","Health and fitness","Consciousness and change","Marketing and advertising"],e:"The purposes listed are entertainment, social, educational, recruitment and training, health and fitness, consciousness and change, aesthetics and creativity, and marketing and advertising."},
+{m:2,q:"Why do many people play games, under the entertainment goal?",o:["To escape the stresses of daily life or relieve boredom","To qualify for professional tournaments","To earn a monthly subscription refund","To practice for military recruitment"],e:"Escape and relief from boredom are the motivations named."},
+{m:2,q:"Which in-game actions are mentioned under the entertainment goal?",o:["Role-play, physical movement, and problem-solving","Micromanagement, multitasking, and resource balancing","Jumping, dodging, and collecting items","Buying, selling, and trading equipment"],e:"These involve players in creating the entertainment experience themselves."},
+{m:2,q:"Social interaction in games can range from what to what?",o:["Simple two-person arcade games to MMOs with thousands playing at once","Turn-based games to time-limited games","Advergames to advertainment sites","Vehicle sims to process sims"],e:"That range is exactly how the social goal is described."},
+{m:2,q:"Educational games feature what?",o:["In-game knowledge acquisition","Subscription-based revenue","Micromanagement of resources","Wish fulfillment for athletes"],e:"Knowledge of topics is taught or accessed within the game itself."},
+{m:2,q:"Which subjects are given as examples for educational games?",o:["Geography, math, and reading","Poverty, human rights, and climate change","Leadership and management","Music, comics, and instrumentals"],e:"These are the sample topics taught through educational games."},
+{m:2,q:"Which institutions used simulation games to train astronauts and pilots?",o:["NASA and the Air Force","Sony and Nintendo","Non-profit and religious groups","Online gambling sites"],e:"Both are named as government and military users of simulation training."},
+{m:2,q:"What do simulation games replicate?",o:["Processes, environments, and objects that exist in the real world","Only the physics of vehicles","Fictional worlds with invented rules","The behaviour of other online players"],e:"That real-world replication is what makes them useful for training."},
+{m:2,q:"Corporations have developed games to build which employee skills?",o:["Leadership and management","Reflexes and reaction time","Typing and data entry","Marketing and advertising"],e:"Corporate training games target leadership and management skills."},
+{m:2,q:"What is an exergame?",o:["A health and fitness subcategory specifically related to fitness","A game that exercises the player's memory","A training game used by the military","A game bundled with gym membership"],e:"Exergames are the fitness-specific subcategory of health and fitness games."},
+{m:2,q:"Which titles are cited as exergames?",o:["EA Sports Active and Wii Fit","Tetris and WarioWare D.I.Y.","Guitar Hero World Tour and Re-Mission","Dungeons and Dragons and Just Dance"],e:"Both are named as commercial exergames; music and rhythm games such as Just Dance could also count."},
+{m:2,q:"What does Re-Mission give children with cancer?",o:["A sense of power and control over their disease by battling cancer cells","A way to share their artwork with other patients","Free access to a subscription MMORPG","Physical rehabilitation exercises"],e:"It is the medical game example given under health and fitness."},
+{m:2,q:"Games for change is another term for which goal?",o:["Consciousness and change","Aesthetics and creativity","Recruitment and training","Marketing and advertising"],e:"Games created for social consciousness and change are sometimes called games for change."},
+{m:2,q:"Which groups might create games for change?",o:["Non-profit, political, or religious groups","Console hardware manufacturers","Online gambling sites","Arcade operators"],e:"These groups use games to raise awareness of beliefs, attitudes, values, lifestyles, and causes."},
+{m:2,q:"Which social issue is NOT listed as a subject of games for change?",o:["Cybercrime","Poverty","Human rights","Climate change"],e:"The issues named are poverty, human rights, global conflict, and climate change."},
+{m:2,q:"What does WarioWare D.I.Y. let players make?",o:["Their own games, music, and comics","Their own consoles","Their own advergames","Their own sports teams"],e:"It is the aesthetics and creativity example for the DSi XL."},
+{m:2,q:"Guitar Hero World Tour lets players share instrumentals through which service?",o:["GHTunes","GHShare","WarioNet","Re-Mission"],e:"GHTunes is the sharing service named."},
+{m:2,q:"What are advergames?",o:["Games designed specifically as advertising tools, used as an alternative to banners","Games that carry no advertising at all","Games that advertise other games","Games sold on subscription to advertisers"],e:"Advertisers pay sites to host them, and they usually feature the advertiser's brand."},
+{m:2,q:"Advergames are commonly created with which tools?",o:["Flash or Java","C++ or assembly","Unity or Unreal","HTML or CSS only"],e:"Many advergames exist online and are built in Flash or Java."},
+{m:2,q:"What is advertainment?",o:["Sites built to showcase a brand that also contain games and discussion forums","A game that shows video ads between levels","Advertising printed on arcade cabinets","A subscription that removes ads"],e:"These sites become a fun hangout for customers."},
+
+/* ---------- MODULE 2: GENRES ---------- */
+{m:2,q:"Genres are categories based on a combination of which factors?",o:["Subject matter, setting, screen presentation, player perspective, and playing strategies","Platform, price, and release date","Player mode, time interval, and revenue model","Developer, publisher, and rating"],e:"Those five factors together define a genre."},
+{m:2,q:"Why is simplicity necessary in action games?",o:["The average brain cannot process much extra information in a fast-paced environment","Action games must fit on handheld devices","Action games are always turn-based","Action games have no story to explain"],e:"The pace leaves no room for additional information."},
+{m:2,q:"Action games focus on which player trait?",o:["Reaction time","Long-term planning","Resource management","Storytelling"],e:"The goal is destroying enemies quickly while avoiding being destroyed."},
+{m:2,q:"What motivates people to play action games?",o:["The adrenaline rush of quick reflexes and snap judgments","The chance to reflect carefully on each move","The social bonds formed with teammates","The ability to build something within a process"],e:"Action games favour reflexive action over reflective thought."},
+{m:2,q:"The platformer sub-genre focuses on what?",o:["Moving quickly through an environment, jumping and dodging obstacles","Shooting enemies from a first-person view","Racing vehicles across varied terrain","Managing troops and resources"],e:"Platformers also often involve collecting items along the way."},
+{m:2,q:"In a first-person shooter, what can the player see?",o:["The character's weapons and other characters, but not his or her own character","The character's full body from behind","A top-down view of the whole map","Only the other players' characters"],e:"The first-person perspective hides the player's own character onscreen."},
+{m:2,q:"What is an advantage of third-person shooters?",o:["A much wider perspective than an FPS, which is limited to straight-ahead vision","Faster reaction times for the player","A smaller download size","No need for weapons"],e:"Seeing the character and the world around it widens the view."},
+{m:2,q:"How long does a fighting game session last, on average?",o:["90 seconds","5 minutes","30 seconds","10 minutes"],e:"Fighting sessions average around 90 seconds each."},
+{m:2,q:"Fighting games are often viewed from which perspective?",o:["A side perspective","A first-person perspective","A top-down perspective","An isometric perspective"],e:"Two players control figures onscreen, usually seen from the side."},
+{m:2,q:"What is the standard scenario in the racing sub-genre?",o:["The player's vehicle races one or more opponents on varied roads or terrains","The player builds and manages a racing team","The player repairs vehicles against a timer","The player controls a whole fleet of cars at once"],e:"Racing uses a first-person or third-person perspective, and the challenge is speed without losing control."},
+{m:2,q:"Adventure games are usually which time interval?",o:["Turn-based, allowing time for reflective thoughts","Real-time, with constant pressure","Time-limited, with a cap on each turn","Real-time only in multiplayer"],e:"Unlike action games, adventure games give players time to think."},
+{m:2,q:"Which is the only hybrid genre that has become an accepted genre of its own?",o:["Action-adventure","Action-strategy","Puzzle-RPG","Racing-simulation"],e:"It combines reflexive action with conceptual puzzles and story."},
+{m:2,q:"Why are pure adventure gamers usually uninterested in action-adventures?",o:["They are used to the slower pace of adventure games","They dislike stories in games","They only play turn-based strategy","They prefer first-person perspectives"],e:"The hybrid's faster pace does not suit them, though it attracted a new audience."},
+{m:2,q:"Casino games are usually electronic versions of what?",o:["Roulette, craps, poker, blackjack, and slot machines","Board, card, and dice games from tabletop","Sports and participatory simulations","Classic strategy games such as chess"],e:"The addiction motivation of this genre is closely tied to gambling."},
+{m:2,q:"What does a pure puzzle game focus on?",o:["Solving a puzzle or series of puzzles without controlling a character","Controlling a character who solves puzzles for others","Building resources to defeat an opponent","Unravelling a long story across many chapters"],e:"There is little or no story surrounding a pure puzzle game."},
+{m:2,q:"How is Tetris described?",o:["A pattern-based puzzle game played in real-time","A turn-based puzzle game with a strong story","A time-limited strategy game","A participatory simulation"],e:"It is one of the most popular puzzle games of all time and is fast-paced."},
+{m:2,q:"What separates RPGs from adventure games?",o:["RPGs contain player-characters that improve over the course of the game","RPGs have no storyline at all","RPGs are always real-time","RPGs cannot be played online"],e:"Both have strong storylines, but character growth is the RPG's distinguishing feature."},
+{m:2,q:"What is the usual theme of an RPG?",o:["A variation on saving the world","Building a city within a process","Winning a sporting championship","Advertising a brand"],e:"Examples include solving a murder, rescuing a kidnapped person, or destroying a dangerous object."},
+{m:2,q:"How do RPG heroes typically advance?",o:["Through combat, gaining strength, experience, and money for new equipment","By managing limited resources between turns","By collecting items while jumping and dodging","By completing real-world fitness goals"],e:"Combat is the named route to advancement."},
+{m:2,q:"Simulations attempt to replicate systems, machines, and experiences using what?",o:["Real-world rules","Randomly generated rules","Rules voted on by players","Simplified arcade physics"],e:"That fidelity to real rules is what defines a sim."},
+{m:2,q:"What are the three types of simulation games?",o:["Vehicle, participatory, and process","Vehicle, tactical, and economic","Sports, racing, and fighting","Turn-based, real-time, and time-limited"],e:"Those are the three sim types listed."},
+{m:2,q:"In vehicle simulations, what does the player usually operate?",o:["Complicated machinery such as jet fighters, ships, or tanks","A city's power and water systems","A sports team's roster","A character on foot"],e:"Adaptations of these sims are widely used by the military for training and recruiting."},
+{m:2,q:"Sports games are described as a type of which simulation?",o:["Participatory simulation","Vehicle simulation","Process simulation","Construction and management simulation"],e:"Players participate in the simulation as a player and often as a coach."},
+{m:2,q:"What does wish fulfillment mean in sports simulations?",o:["Becoming an extraordinary athlete and doing what you could not do in real life","Winning money from other players","Designing your own stadium","Watching a match without playing it"],e:"Players vicariously participate in their favourite sport."},
+{m:2,q:"Process simulations are also known as what?",o:["Construction and management sims (CMS), or toy games","Vehicle sims, or trainers","Advergames, or advertainment","Real-time strategy, or RTS"],e:"They involve real-world systems or processes."},
+{m:2,q:"What is the goal in a process simulation?",o:["To build something within a process rather than defeat an opponent","To destroy the opposing player's base","To finish the course before the timer runs out","To collect the most items in a level"],e:"These games are constructive rather than destructive; winning means understanding and controlling the process."},
+{m:2,q:"Where do strategy games have their origin?",o:["Classic board games such as chess","Arcade cabinets of the 1970s","Early online mainframe games","Military training simulators"],e:"Players manage a limited set of resources to reach a goal."},
+{m:2,q:"In turn-based strategy, what is part of the appeal?",o:["The player's ability to take time making discrete decisions","The constant pressure of a countdown","The unpredictability of other players' reflexes","The absence of any resource management"],e:"Decisions include what resources to create, when to deploy them, and how to use them best."},
+{m:2,q:"What is micromanagement in real-time strategy games?",o:["Rapidly balancing sets of resources that contain several features","Assigning tasks to other human players","Adjusting the game's graphics settings mid-match","Managing a subscription across several accounts"],e:"Because the game moves quickly, one set of resources may flourish while others fail."},
+{m:2,q:"What must RTS players employ to avoid disaster?",o:["A certain level of multitasking","Unlimited turn time","A first-person perspective","A subscription-based account"],e:"They cannot feasibly focus on all sets of resources at once."},
+{m:2,q:"Which is NOT listed as a variation of the MMO genre?",o:["MMOTBS — massively multiplayer turn-based strategy","MMORPG — massively multiplayer online role-playing game","MMOFPS — massively multiplayer first-person shooter","MMORTS — massively multiplayer real-time strategy"],e:"The three variations named are MMORPG, MMOFPS, and MMORTS."},
+{m:2,q:"What is a common issue in MMOs?",o:["Player misbehaviour — rudeness, harassment, cheating, even fraud","Servers that shut down between turns","The inability to communicate in real-time","A hard limit of four players per world"],e:"Misbehaviour is a serious threat to other players' enjoyment of the game."}
+
+];
+
+/* ======================= state ======================= */
+const $ = id => document.getElementById(id);
+let deck = [], idx = 0, score = 0, answered = false, missed = [];
+
+/* ======================= theme ======================= */
+const SUN = '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/>';
+const MOON = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+function setTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  $("themeIcon").innerHTML = t === "dark" ? SUN : MOON;
+  $("themeBtn").setAttribute("aria-label", t === "dark" ? "Switch to light mode" : "Switch to dark mode");
+}
+$("themeBtn").addEventListener("click", () => {
+  const t = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  setTheme(t);
+  try{ localStorage.setItem("reviewerTheme", t); }catch(e){}
+});
+let savedTheme = null;
+try{ savedTheme = localStorage.getItem("reviewerTheme"); }catch(e){}
+setTheme(savedTheme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+
+/* ======================= helpers ======================= */
+function shuffle(a){
+  const r = a.slice();
+  for(let i = r.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [r[i], r[j]] = [r[j], r[i]];
   }
-  $("themeBtn").addEventListener("click", () => {
-    const t = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
-    setTheme(t);
-    try{ localStorage.setItem("reviewerTheme", t); }catch(e){}
+  return r;
+}
+function show(name){
+  ["startScreen","quizScreen","resultScreen"].forEach(s => $(s).classList.add("hide"));
+  $(name).classList.remove("hide");
+  $("keyHint").classList.toggle("hide", name !== "quizScreen");
+}
+
+/* ======================= start ======================= */
+$("cAll").textContent = BANK.length;
+$("c1").textContent = BANK.filter(q => q.m === 1).length;
+$("c2").textContent = BANK.filter(q => q.m === 2).length;
+
+document.querySelectorAll(".deck-btn").forEach(b => {
+  b.addEventListener("click", () => {
+    const mod = b.dataset.mod;
+    const pool = mod === "all" ? BANK.slice() : BANK.filter(q => q.m === Number(mod));
+    begin(pool);
+  });
+});
+
+function begin(pool){
+  deck = $("shuffleBox").checked ? shuffle(pool) : pool.slice();
+  idx = 0; score = 0; missed = [];
+  $("qTotal").textContent = deck.length;
+  show("quizScreen");
+  render();
+}
+
+/* ======================= question ======================= */
+function render(){
+  answered = false;
+  const q = deck[idx];
+  $("qNow").textContent = idx + 1;
+  $("score").textContent = score;
+  $("railFill").style.width = (idx / deck.length * 100) + "%";
+  $("modBadge").textContent = q.m === 1 ? "Platforms & Player Modes" : "Goals & Genres";
+  $("qText").textContent = q.q;
+  $("fbSlot").innerHTML = "";
+  $("nextRow").classList.add("hide");
+  $("nextBtn").textContent = idx === deck.length - 1 ? "See your results" : "Next question";
+
+  const order = shuffle([0,1,2,3]);
+  const box = $("choices");
+  box.innerHTML = "";
+  order.forEach((orig, pos) => {
+    const btn = document.createElement("button");
+    btn.className = "choice";
+    btn.dataset.correct = (orig === 0) ? "1" : "0";
+    btn.innerHTML = '<span class="key">' + "ABCD"[pos] + '</span><span>' + escapeHTML(q.o[orig]) + '</span>';
+    btn.addEventListener("click", () => answer(btn));
+    box.appendChild(btn);
+  });
+}
+function escapeHTML(s){
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+/* ======================= answering ======================= */
+function answer(btn){
+  if(answered) return;
+  answered = true;
+  const q = deck[idx];
+  const right = btn.dataset.correct === "1";
+  const all = [...$("choices").children];
+
+  all.forEach(b => {
+    b.disabled = true;
+    if(b.dataset.correct === "1") b.classList.add("correct");
+    else if(b === btn) b.classList.add("wrong");
+    else b.classList.add("dim");
   });
 
-  let saved = null;
-  try{ saved = localStorage.getItem("reviewerTheme"); }catch(e){}
-  setTheme(saved || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+  if(right){
+    score++;
+    $("score").textContent = score;
+  } else {
+    missed.push({
+      q: q.q,
+      yours: btn.textContent.slice(1).trim(),
+      right: q.o[0],
+      e: q.e,
+      ref: q
+    });
+  }
+
+  const fb = document.createElement("div");
+  fb.className = "fb " + (right ? "good" : "bad");
+  fb.innerHTML = "<strong>" + (right ? "Correct" : "The answer is: " + escapeHTML(q.o[0])) + "</strong>" + escapeHTML(q.e);
+  $("fbSlot").appendChild(fb);
+
+  $("nextRow").classList.remove("hide");
+  $("nextBtn").focus({preventScroll:true});
+}
+
+$("nextBtn").addEventListener("click", () => {
+  if(idx === deck.length - 1) finish();
+  else { idx++; render(); }
+});
+
+/* ======================= results ======================= */
+function finish(){
+  const total = deck.length;
+  const pct = Math.round(score / total * 100);
+  $("finalScore").textContent = score;
+  $("finalOf").textContent = " / " + total;
+
+  let msg;
+  if(pct === 100) msg = "Perfect run. Nothing left to review here.";
+  else if(pct >= 85) msg = "Solid — " + pct + "% right. Just tighten up the few below.";
+  else if(pct >= 65) msg = pct + "% right. Worth another pass over the ones you missed.";
+  else msg = pct + "% right. Read back through the handout, then run this again.";
+  $("verdict").textContent = msg;
+
+  $("retryMissed").classList.toggle("hide", missed.length === 0);
+  $("missedWrap").classList.toggle("hide", missed.length === 0);
+  $("missedTitle").textContent = "What to go back over (" + missed.length + ")";
+  if(missed.length){
+    $("retryMissed").textContent = "Retry the " + missed.length + " you missed";
+    $("missedList").innerHTML = missed.map(m =>
+      '<div class="miss"><p>' + escapeHTML(m.q) + '</p>' +
+      '<span class="yours">You picked: ' + escapeHTML(m.yours) + '</span>' +
+      '<span class="right">Correct: ' + escapeHTML(m.right) + '</span></div>'
+    ).join("");
+  }
+  show("resultScreen");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+$("retryMissed").addEventListener("click", () => begin(missed.map(m => m.ref)));
+$("restartBtn").addEventListener("click", () => show("startScreen"));
+
+/* ======================= keyboard ======================= */
+document.addEventListener("keydown", e => {
+  if($("quizScreen").classList.contains("hide")) return;
+  if(e.key === "Enter" && answered){ e.preventDefault(); $("nextBtn").click(); return; }
+  const n = "1234".indexOf(e.key);
+  const l = "abcd".indexOf(e.key.toLowerCase());
+  const pick = n > -1 ? n : l;
+  if(pick > -1 && !answered){
+    const b = $("choices").children[pick];
+    if(b) b.click();
+  }
+});
+
+show("startScreen");
 </script>
 </body>
 </html>
