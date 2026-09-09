@@ -69,6 +69,14 @@
   }
   .mark{flex:none;width:34px;height:34px;color:var(--accent);margin-top:2px;}
   .titles{flex:1;min-width:0;}
+  .back-link{
+    display:inline-block;
+    font-size:.75rem;font-weight:650;
+    color:var(--faint);text-decoration:none;
+    margin-bottom:5px;
+    transition:color .15s ease;
+  }
+  .back-link:hover{color:var(--accent);}
   h1{
     margin:0;
     font-size:1.5rem;
@@ -283,6 +291,7 @@
       <path d="M7 11v4M5 13h4M15.5 12.5h.01M18 15h.01"/>
     </svg>
     <div class="titles">
+      <a href="../" class="back-link">&larr; All reviewers</a>
       <h1>GameDev Reviewer</h1>
       <p class="sub">Platforms &amp; Player Modes + Goals &amp; Genres</p>
     </div>
@@ -475,9 +484,13 @@ function setTheme(t){
   $("themeBtn").setAttribute("aria-label", t === "dark" ? "Switch to light mode" : "Switch to dark mode");
 }
 $("themeBtn").addEventListener("click", () => {
-  setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
+  const t = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  setTheme(t);
+  try{ localStorage.setItem("reviewerTheme", t); }catch(e){}
 });
-setTheme(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+let savedTheme = null;
+try{ savedTheme = localStorage.getItem("reviewerTheme"); }catch(e){}
+setTheme(savedTheme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
 
 /* ======================= helpers ======================= */
 function shuffle(a){
