@@ -1,1 +1,676 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ITSM Reviewer — Introduction to ITSM + IT Service Methods</title>
+<style>
+  :root{
+    --bg:#EAEDF5;
+    --bg2:#F4F6FB;
+    --card:#FFFFFF;
+    --ink:#151721;
+    --muted:#616880;
+    --faint:#8B92A8;
+    --line:#E1E5EF;
+    --line-strong:#CDD3E2;
+    --accent:#4B3BD6;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#EBE8FC;
+    --ok:#0B7A57;
+    --ok-soft:#E0F2EA;
+    --ok-line:#8FD3BB;
+    --no:#B62F47;
+    --no-soft:#FBE7EB;
+    --no-line:#EDA7B4;
+    --shadow:0 1px 2px rgba(20,24,50,.06), 0 12px 28px -14px rgba(20,24,50,.28);
+  }
+  html[data-theme="dark"]{
+    --bg:#0C0E15;
+    --bg2:#12151E;
+    --card:#171A25;
+    --ink:#E9EBF3;
+    --muted:#98A0B6;
+    --faint:#6E7690;
+    --line:#252A38;
+    --line-strong:#333A4C;
+    --accent:#9E8FFF;
+    --accent-ink:#14101F;
+    --accent-soft:#221E3B;
+    --ok:#4CCB9C;
+    --ok-soft:#10261F;
+    --ok-line:#255A48;
+    --no:#FF8095;
+    --no-soft:#2A1219;
+    --no-line:#5C2733;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 18px 34px -18px rgba(0,0,0,.8);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--bg);
+    background-image:radial-gradient(120% 60% at 50% 0%, var(--bg2) 0%, var(--bg) 62%);
+    background-attachment:fixed;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    -webkit-text-size-adjust:100%;
+    line-height:1.5;
+    min-height:100vh;
+    padding:0 16px calc(28px + env(safe-area-inset-bottom));
+  }
+  .wrap{max-width:600px;margin:0 auto;}
+
+  /* ---------- header ---------- */
+  header{
+    display:flex;align-items:flex-start;gap:12px;
+    padding:22px 2px 18px;
+  }
+  .mark{flex:none;width:34px;height:34px;color:var(--accent);margin-top:2px;}
+  .titles{flex:1;min-width:0;}
+  .back-link{
+    display:inline-block;
+    font-size:.75rem;font-weight:650;
+    color:var(--faint);text-decoration:none;
+    margin-bottom:5px;
+    transition:color .15s ease;
+  }
+  .back-link:hover{color:var(--accent);}
+  h1{
+    margin:0;
+    font-size:1.5rem;
+    font-weight:800;
+    letter-spacing:-.024em;
+    line-height:1.15;
+  }
+  .sub{
+    margin:4px 0 0;
+    font-size:.8125rem;
+    color:var(--muted);
+    letter-spacing:.005em;
+  }
+  .theme-btn{
+    flex:none;
+    width:38px;height:38px;
+    display:grid;place-items:center;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:var(--card);
+    color:var(--muted);
+    cursor:pointer;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .theme-btn:hover{color:var(--accent);border-color:var(--line-strong);}
+  .theme-btn svg{width:17px;height:17px;}
+
+  /* ---------- card ---------- */
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .pad{padding:22px;}
+  @media (max-width:420px){ .pad{padding:18px;} }
+
+  /* ---------- start screen ---------- */
+  .lede{
+    margin:0 0 20px;
+    font-size:.9375rem;
+    color:var(--muted);
+    max-width:46ch;
+  }
+  .deck{display:grid;gap:10px;}
+  .deck-btn{
+    display:flex;align-items:center;gap:14px;
+    width:100%;text-align:left;
+    padding:15px 16px;
+    background:transparent;
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    color:inherit;font:inherit;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .deck-btn:hover{border-color:var(--accent);background:var(--accent-soft);}
+  .deck-n{
+    flex:none;
+    min-width:34px;
+    text-align:center;
+    font-size:1.0625rem;
+    font-weight:800;
+    color:var(--accent);
+    font-variant-numeric:tabular-nums;
+    letter-spacing:-.02em;
+  }
+  .deck-t{display:block;font-weight:650;font-size:.9375rem;}
+  .deck-d{display:block;font-size:.8125rem;color:var(--muted);margin-top:3px;line-height:1.4;}
+  .opts-row{
+    display:flex;align-items:center;gap:9px;
+    margin-top:18px;font-size:.8125rem;color:var(--muted);
+    cursor:pointer;user-select:none;
+  }
+  .opts-row input{accent-color:var(--accent);width:16px;height:16px;cursor:pointer;}
+
+  /* ---------- quiz meta ---------- */
+  .meta{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-size:.8125rem;color:var(--muted);
+    font-variant-numeric:tabular-nums;
+  }
+  .meta b{color:var(--ink);font-weight:650;}
+  .rail{
+    height:5px;border-radius:99px;background:var(--line);
+    margin:11px 0 20px;overflow:hidden;
+  }
+  .rail span{
+    display:block;height:100%;width:0;border-radius:99px;
+    background:var(--accent);
+    transition:width .32s cubic-bezier(.4,0,.2,1);
+  }
+  .badge{
+    display:inline-block;
+    padding:4px 11px;border-radius:99px;
+    background:var(--accent-soft);color:var(--accent);
+    font-size:.6875rem;font-weight:700;letter-spacing:.04em;
+    margin-bottom:14px;
+  }
+  .qtext{
+    margin:0 0 18px;
+    font-size:1.1875rem;
+    font-weight:700;
+    letter-spacing:-.012em;
+    line-height:1.34;
+  }
+
+  /* ---------- options ---------- */
+  .choices{display:grid;gap:9px;}
+  .choice{
+    display:flex;align-items:flex-start;gap:12px;
+    width:100%;text-align:left;
+    padding:13px 14px;
+    background:transparent;
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    color:inherit;
+    font:inherit;font-size:.9375rem;line-height:1.42;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease, opacity .2s ease;
+  }
+  .choice:hover:not(:disabled){border-color:var(--line-strong);background:var(--bg2);}
+  .choice:disabled{cursor:default;}
+  .key{
+    flex:none;
+    width:24px;height:24px;margin-top:-1px;
+    display:grid;place-items:center;
+    border-radius:8px;
+    background:var(--line);
+    color:var(--muted);
+    font-size:.75rem;font-weight:700;
+    transition:background .15s ease,color .15s ease;
+  }
+  .choice.correct{border-color:var(--ok-line);background:var(--ok-soft);}
+  .choice.correct .key{background:var(--ok);color:var(--card);}
+  .choice.wrong{border-color:var(--no-line);background:var(--no-soft);}
+  .choice.wrong .key{background:var(--no);color:var(--card);}
+  .choice.dim{opacity:.42;}
+
+  /* ---------- feedback ---------- */
+  .fb{
+    margin-top:16px;padding:13px 15px;
+    border-left:3px solid var(--accent);
+    border-radius:0 12px 12px 0;
+    background:var(--bg2);
+    font-size:.875rem;line-height:1.55;
+    color:var(--muted);
+    animation:rise .22s ease-out;
+  }
+  .fb.good{border-left-color:var(--ok);}
+  .fb.bad{border-left-color:var(--no);}
+  .fb strong{display:block;color:var(--ink);font-weight:700;margin-bottom:3px;font-size:.9375rem;}
+  @keyframes rise{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+
+  /* ---------- buttons ---------- */
+  .actions{display:flex;gap:10px;margin-top:18px;}
+  .btn{
+    flex:1;
+    padding:13px 18px;
+    border-radius:13px;border:1.5px solid transparent;
+    font:inherit;font-size:.9375rem;font-weight:650;
+    cursor:pointer;
+    transition:filter .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .btn-primary{background:var(--accent);color:var(--accent-ink);}
+  .btn-primary:hover{filter:brightness(1.08);}
+  .btn-ghost{background:transparent;color:var(--muted);border-color:var(--line);}
+  .btn-ghost:hover{border-color:var(--line-strong);color:var(--ink);}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  /* ---------- results ---------- */
+  .score-big{
+    font-size:3.25rem;font-weight:800;letter-spacing:-.04em;line-height:1;
+    font-variant-numeric:tabular-nums;
+  }
+  .score-of{font-size:1.125rem;color:var(--faint);font-weight:600;}
+  .verdict{margin:10px 0 0;color:var(--muted);font-size:.9375rem;max-width:44ch;}
+  .missed{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;}
+  .missed h3{margin:0 0 12px;font-size:.875rem;font-weight:700;color:var(--muted);}
+  .miss{padding:12px 0;border-bottom:1px solid var(--line);font-size:.875rem;}
+  .miss:last-child{border-bottom:0;}
+  .miss p{margin:0 0 5px;font-weight:650;line-height:1.4;}
+  .miss .yours{color:var(--no);}
+  .miss .right{color:var(--ok);}
+  .miss span{display:block;line-height:1.45;}
+
+  .hint{
+    text-align:center;margin:16px 0 0;
+    font-size:.75rem;color:var(--faint);
+  }
+  .hint kbd{
+    font-family:inherit;font-size:.6875rem;font-weight:700;
+    border:1px solid var(--line-strong);border-radius:5px;
+    padding:1px 5px;color:var(--muted);
+  }
+  @media (max-width:640px){ .hint.keys{display:none;} }
+  footer{text-align:center;margin:18px 0 0;font-size:.75rem;color:var(--faint);}
+  .hide{display:none !important;}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+    <div class="titles">
+      <a href="../" class="back-link">&larr; All reviewers</a>
+      <h1>ITSM Reviewer</h1>
+      <p class="sub">Introduction to ITSM + IT Service Methods</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" aria-label="Switch to dark mode" title="Switch theme">
+      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </header>
+
+  <!-- ===== START ===== -->
+  <section class="card hide" id="startScreen">
+    <div class="pad">
+      <p class="lede">Pick a set and answer as you go. You get the reason for every answer right after you tap, so a wrong one still teaches you something.</p>
+      <div class="deck">
+        <button class="deck-btn" data-mod="all">
+          <span class="deck-n" id="cAll">0</span>
+          <span><span class="deck-t">Everything</span><span class="deck-d">Both handouts, mixed together</span></span>
+        </button>
+        <button class="deck-btn" data-mod="1">
+          <span class="deck-n" id="c1">0</span>
+          <span><span class="deck-t">Introduction to ITSM</span><span class="deck-d">Handout 1 — IHIP traits, benefits, ITIL history, tools</span></span>
+        </button>
+        <button class="deck-btn" data-mod="2">
+          <span class="deck-n" id="c2">0</span>
+          <span><span class="deck-t">IT Service Methods</span><span class="deck-d">Handout 2 — virtual value chain, ITSM processes</span></span>
+        </button>
+      </div>
+      <label class="opts-row"><input type="checkbox" id="shuffleBox" checked> Shuffle the order each time</label>
+    </div>
+  </section>
+
+  <!-- ===== QUIZ ===== -->
+  <section class="card hide" id="quizScreen">
+    <div class="pad">
+      <div class="meta">
+        <span>Question <b id="qNow">1</b> / <span id="qTotal">0</span></span>
+        <span>Score <b id="score">0</b></span>
+      </div>
+      <div class="rail"><span id="railFill"></span></div>
+      <div class="badge" id="modBadge">Module 1</div>
+      <h2 class="qtext" id="qText">—</h2>
+      <div class="choices" id="choices"></div>
+      <div id="fbSlot"></div>
+      <div class="actions hide" id="nextRow">
+        <button class="btn btn-primary" id="nextBtn">Next question</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RESULTS ===== -->
+  <section class="card hide" id="resultScreen">
+    <div class="pad">
+      <div><span class="score-big" id="finalScore">0</span><span class="score-of" id="finalOf"> / 0</span></div>
+      <p class="verdict" id="verdict"></p>
+      <div class="actions">
+        <button class="btn btn-primary" id="retryMissed">Retry the ones you missed</button>
+      </div>
+      <div class="actions" style="margin-top:10px">
+        <button class="btn btn-ghost" id="restartBtn">Back to the start</button>
+      </div>
+      <div class="missed hide" id="missedWrap">
+        <h3 id="missedTitle">What to go back over</h3>
+        <div id="missedList"></div>
+      </div>
+    </div>
+  </section>
+
+  <p class="hint keys" id="keyHint">Press <kbd>1</kbd>–<kbd>4</kbd> to answer, <kbd>Enter</kbd> to continue</p>
+  <footer>Works offline. Nothing is sent anywhere.</footer>
+</div>
+
+<script>
+/* =======================================================================
+   Question bank.  Authoring rule: o[0] is ALWAYS the correct answer.
+   The options get shuffled at runtime, so order here doesn't matter.
+   m = module (1 = Handout 1, 2 = Handout 2)
+   ======================================================================= */
+const BANK = [
+
+/* ---------- MODULE 1: INTRODUCTION TO ITSM ---------- */
+{m:1,q:"Which four characteristics together are known as the IHIP traits of services?",o:["Intangibility, Heterogeneity, Inseparability, Perishability","Intangibility, Heterogeneity, Interoperability, Portability","Integrity, Heterogeneity, Inseparability, Predictability","Intangibility, Homogeneity, Inseparability, Perishability"],e:"IHIP stands for Intangibility, Heterogeneity, Inseparability, and Perishability."},
+{m:1,q:"What does it mean for a service to be intangible?",o:["It is not a physical item and cannot be touched, unlike a product","It cannot be delivered more than once","It has no measurable value to the customer","It always requires digital infrastructure"],e:"Unlike a car, dress, or food, something like a theater performance or dental appointment has no physical form."},
+{m:1,q:"Which examples illustrate intangibility in the handout?",o:["A theater performance, a dental appointment, and financial advice","A hotel room, a massage, and a doctor visit","A car, a dress, and food","A helpdesk ticket and a software license"],e:"These are given as services that, unlike products, cannot be touched."},
+{m:1,q:"What does heterogeneity mean for a service?",o:["It is difficult to standardize because customer needs and behavior vary","It can be mass-produced identically every time","It only applies to digital services","It cannot be delivered by more than one provider"],e:"Every delivery of a service can differ, since customer needs and behavior vary each time."},
+{m:1,q:"In the massage salon example, what illustrates heterogeneity?",o:["A patron might request a more complex massage one day and a lighter one another day","The salon uses the same technique on every customer","The service is delivered through a mobile app","The massage is pre-recorded and identical each time"],e:"Customer requests can vary beyond what was designed or advertised, showing heterogeneity."},
+{m:1,q:"What does inseparability mean in services?",o:["Production and consumption of the service happen simultaneously","The service can be stored and used later","The service provider is never present during delivery","The service cannot be divided into stages"],e:"The provider is often physically present while the customer consumes the service, as with an instructor teaching or a doctor diagnosing."},
+{m:1,q:"Which examples illustrate inseparability?",o:["An instructor teaching while students learn, or a doctor diagnosing a patient","A hotel room booked for a future date","A theater performance recorded on video","A product shipped to a customer's home"],e:"Both examples show the provider present at the same time the service is consumed."},
+{m:1,q:"What does it mean for a service to be perishable?",o:["It cannot be stored and has a limited \u201cshelf life\u201d","It degrades in physical quality over time","It can only be delivered once per customer","It becomes cheaper the longer it goes unused"],e:"An unbooked hotel room for a given night is a service opportunity that cannot be recovered afterward."},
+{m:1,q:"In the hotel room example, why has the service \u201cperished\u201d if not booked for Christmas night?",o:["The same room on a later night is a different service opportunity, not a recovery of the lost one","The hotel loses its license to rent that room","The room becomes physically unusable afterward","The customer is refunded automatically"],e:"That specific night's availability cannot be stored or resold as the same value later."},
+{m:1,q:"What has significantly affected how far the IHIP characteristics apply and their limits?",o:["The development of information and communication technology (ICT)","The rise of physical retail chains","Government regulation of service industries","An increase in customer complaints"],e:"ICT development has changed the extent to which IHIP traits limit service operations."},
+{m:1,q:"What does IT Service Management (ITSM) allow organizations to do?",o:["Maximize business value using information technology","Replace all physical services with digital ones","Avoid the need for a helpdesk entirely","Eliminate the need for IT staff"],e:"ITSM is about implementing and managing quality IT services that meet business needs and deliver value."},
+{m:1,q:"How is ITSM defined in terms of what it manages?",o:["The implementation and management of quality IT services that meet needs and deliver value to the business","The purchase and installation of new computer hardware","A marketing framework for selling software","A method for training new IT employees only"],e:"That is the handout's core definition of ITSM."},
+{m:1,q:"What does ITSM demonstrate, according to the handout?",o:["A set of practices or processes that establish a service management system","A single piece of proprietary software","A government regulation for IT companies","A hardware certification program"],e:"ITSM is a system of practices and processes, not one product."},
+{m:1,q:"Which standard is given as an example that sets requirements and good practices for ITSM?",o:["Information Technology Infrastructure Library (ITIL)","International Organization for Standardization (ISO 9001)","General Data Protection Regulation (GDPR)","Institute of Electrical and Electronics Engineers (IEEE)"],e:"ITIL is named as an industrial, national, and international standard for ITSM."},
+{m:1,q:"In the example given, what must an employee do to request laptop maintenance under ITSM?",o:["Submit a request through a helpdesk or portal and fill out a ticket","Call the CEO's office directly","Purchase a replacement laptop personally","Wait for a scheduled maintenance day"],e:"The employee submits a ticket and awaits IT personnel to acknowledge it from their queue."},
+{m:1,q:"Is ITSM limited to day-to-day IT support?",o:["No, it also oversees broader workplace technology from desktops to business-critical software","Yes, it only covers help-desk password resets","Yes, it excludes anything related to servers","No, it exclusively manages marketing technology"],e:"ITSM oversees diverse workplace technology, not just routine support tasks."},
+{m:1,q:"Which of these is one of the Critical Benefits of ITSM listed in the handout?",o:["Business Alignment","Higher advertising revenue","Reduced office space","Faster hardware manufacturing"],e:"Business Alignment is one of the five critical benefits named."},
+{m:1,q:"What does Business Alignment as an ITSM benefit ensure?",o:["Everyone is on the same page and working toward the same goals","IT staff work independently of business goals","Only executives understand the IT roadmap","Business goals change every quarter"],e:"It gives the IT team a precise understanding of business requirements, keeping processes scalable and easy to replicate."},
+{m:1,q:"How does effective ITSM lead to Increased Productivity?",o:["Through accounted roles and associated responsibilities within the IT team","By reducing the number of employees needed","By removing all documentation requirements","By automating every customer interaction"],e:"Clear roles and responsibilities are what drive the productivity gain."},
+{m:1,q:"What does the Satisfied End-users benefit of ITSM refer to?",o:["End-users receiving the best service with reasonable expectations","End-users no longer needing any IT support","End-users paying lower subscription fees","End-users being given administrator access"],e:"Greater end-user satisfaction contributes to overall business success."},
+{m:1,q:"How does ITSM support Improved Problem-solving?",o:["It lessens the time between incident identification and solution implementation through detailed analytics","It removes the need to log incidents","It guarantees zero downtime at all times","It replaces IT staff with automated bots"],e:"Access to detailed analytics enables a more proactive approach that can strike preemptively before damage occurs."},
+{m:1,q:"What does the Compliance benefit of ITSM ensure?",o:["That the organization satisfies and meets all relevant regulatory requirements","That the IT department never needs an audit","That software licenses are always free","That employees are compliant with dress code"],e:"Compliance is about meeting regulatory requirements the organization must possess."},
+{m:1,q:"What is widely pointed to as the starting point for ITSM?",o:["The introduction of ITIL, with its set of best practice books","The invention of the personal computer","The founding of Microsoft","The creation of the first helpdesk software"],e:"Many trace ITSM's origin to the introduction of ITIL and its best practice books."},
+{m:1,q:"Why was ITIL first created in the mid-1980s?",o:["The British government was not satisfied with the quality and strategic benefit of the IT services it received","A private company wanted to sell more software licenses","Universities needed a shared IT curriculum","The Internet had just become publicly available"],e:"Dissatisfaction with IT service quality and strategic benefit prompted the British government to act."},
+{m:1,q:"Which agency was tasked with creating the original ITIL practices?",o:["The Central Computer and Telecommunications Agency (CCTA)","The Office of Government Commerce (OGC) at its founding","The International Organization for Standardization (ISO)","The Institute of Electrical and Electronics Engineers (IEEE)"],e:"The CCTA, later renamed the Office of Government Commerce, was tasked with creating efficient, financially responsible IT practices."},
+{m:1,q:"What did the CCTA publish between 1989 and 1996?",o:["ITIL v1, containing more than 30 volumes","ITIL v4, focused on guiding principles","A single unified ITSM glossary","The first ISO 9001 standard"],e:"ITIL v1 was a large, 30-plus volume body of work published in this period."},
+{m:1,q:"What change did ITIL v2 bring between 2000 and 2001?",o:["It condensed the 30 volumes into nine books, grouped by related processes","It removed the need for service desks","It merged ITSM with project management standards","It introduced the seven guiding principles"],e:"ITIL v2 made the framework more accessible by condensing it into nine categorized books."},
+{m:1,q:"What was published for ITIL v2 in 2006?",o:["An additional glossary","A revised set of 30 volumes","The seven guiding principles","A mobile app version of ITIL"],e:"A glossary was added to ITIL v2 in 2006."},
+{m:1,q:"What happened to ITIL in 2007?",o:["ITIL v3 was released, combining 26 processes and functions into five volumes","ITIL was discontinued in favor of a new standard","The CCTA was merged into a private company","ITIL v1 was translated into multiple languages"],e:"ITIL v3, widely known as the ITIL 2007 Edition, organized 26 processes into five volumes matching the service lifecycle."},
+{m:1,q:"What did the 2011 revision of ITIL v3 address?",o:["Errors and inconsistencies in the text and graphics","A complete rewrite of the service lifecycle stages","The addition of a sixth lifecycle volume","A shift away from the ITIL name entirely"],e:"ITIL 2011 fixed errors and inconsistencies rather than introducing new structure."},
+{m:1,q:"What distinguishes ITIL v4, released in 2019, from ITIL v3?",o:["It offers less detailed process guidance and more emphasis on service management principles","It removes all references to service management","It focuses exclusively on hardware procurement","It reduces the framework to a single volume"],e:"ITIL v4 builds on v3 but shifts focus toward broader principles and concepts."},
+{m:1,q:"What does ITIL v4 highlight through its seven guiding principles?",o:["A comprehensive approach to ITSM","A checklist for hardware purchases","A pricing model for ITSM software","A certification exam structure"],e:"The seven guiding principles support ITIL v4's comprehensive approach to ITSM."},
+{m:1,q:"Does the handout claim ITSM is exactly as old as ITIL?",o:["No, some argue ITSM and service management are older than ITIL","Yes, ITSM began the same year ITIL was created","Yes, ITSM cannot exist without ITIL","No, ITSM is a completely unrelated concept to ITIL"],e:"The handout notes that service management concepts predate ITIL, tracing back to early mainframe practices."},
+{m:1,q:"What kinds of management were common in early large-scale mainframe environments?",o:["Configuration, change, problem, availability, and disaster recovery management","Only budget and payroll management","Marketing and advertising management","Employee scheduling management"],e:"These forms of management existed to optimize operations before ITIL formalized the practices."},
+{m:1,q:"How are ITSM tools generally categorized?",o:["Based on what they can do and the quality they deliver","Based on their release year only","Based on their price alone","Based on the size of the company using them"],e:"That is the basis the handout gives for categorizing ITSM tools."},
+{m:1,q:"What is the primary purpose of a Service Desk?",o:["To provide a single point of contact between a business and its customers or employees","To sell IT hardware directly to consumers","To replace the need for an IT department","To manage a company's payroll system"],e:"Service Desks streamline communication both internally and externally."},
+{m:1,q:"How is a Service Desk best described in terms of focus?",o:["Business-centric and proactive","User-centric and reactive","Marketing-centric and passive","Vendor-centric and automated"],e:"Per the comparison table, Service Desks are business-centric, proactive, and process oriented."},
+{m:1,q:"How is a Helpdesk best described in terms of focus?",o:["User-centric and reactive","Business-centric and proactive","Compliance-centric and preventive","Vendor-centric and strategic"],e:"Helpdesks are user-centric, reactive, and follow a break-fix model."},
+{m:1,q:"Which model describes a Helpdesk's approach to issues?",o:["Break-fix: if something breaks, users contact the team to fix it","The complete picture: preventing incidents before they occur","Process oriented: improving the entire support process","Compliance oriented: meeting regulatory needs first"],e:"Helpdesks are reactive and follow a break-fix model, unlike the proactive Service Desk."},
+{m:1,q:"Which describes a Service Desk's approach compared to a Helpdesk's?",o:["It works to prevent incidents in the future rather than just responding to them","It only responds after a system failure occurs","It has no long-term planning role","It focuses solely on the end-user's immediate need"],e:"Service Desks take \u201cthe complete picture\u201d approach, working proactively rather than reactively."},
+{m:1,q:"When choosing ITSM tools, what does \u201cUnderstanding the Team's Goals and Needs\u201d involve?",o:["Answering what support experiences to offer and what features the organization needs and can live without","Selecting the cheapest available tool regardless of features","Copying whatever tool a competitor uses","Avoiding any tool that requires staff training"],e:"This requirement is about matching a tool to what the team actually needs."},
+{m:1,q:"Why does Testing the Interface matter when choosing an ITSM tool?",o:["A more intuitive UI takes less time for employees to feel confident resolving issues","Interface design has no effect on adoption speed","Testing is only required for mobile apps","It determines the tool's monthly subscription cost"],e:"An intuitive interface shortens the adjustment period for the team."},
+{m:1,q:"What does Focusing on Scalability mean when selecting an ITSM tool?",o:["Asking the vendor if the tool can manage an increase in support cases over time","Choosing the tool with the most colorful dashboard","Selecting a tool that cannot be upgraded later","Avoiding vendors that offer customer support"],e:"There's no point investing in a tool that can't grow with the organization's future needs."},
+{m:1,q:"What can Exploring the Reporting Features of an ITSM tool help measure?",o:["Employee performance, user satisfaction, and team productivity","Only the company's marketing budget","The tool vendor's stock price","The number of competitors in the market"],e:"Metrics like response time and ticket resolution time help the organization avoid problems."},
+{m:1,q:"Why does Checking the Vendor's Reliability and Support matter?",o:["Vendors with 24/7 support can resolve issues affecting users at the earliest opportunity","Vendor reliability has no effect on tool performance","Vendors are legally required to offer only email support","Reliable vendors always offer the lowest price"],e:"Email-only vendors may not resolve problems promptly, unlike those with round-the-clock support."},
+{m:1,q:"Which ITSM software is noted for charging per agent per monitored device and working well for remote or device-heavy environments?",o:["SolarWinds Service Desk","Zabbix","Jira Service Desk","Zendesk Suite"],e:"SolarWinds Service Desk is cloud-based, scalable, and priced per agent per monitored device."},
+{m:1,q:"Which software is described as more minimalistic than its sibling product but with a strong intuitive dashboard?",o:["SolarWinds Web Help Desk","Zabbix","Jira Service Desk","Zendesk Suite"],e:"SolarWinds Web Help Desk offers powerful ticketing functionality with an easy-to-navigate dashboard."},
+{m:1,q:"Which open-source ITSM tool is noted for a steep learning curve?",o:["Zabbix","Jira Service Desk","Zendesk Suite","SolarWinds Service Desk"],e:"Zabbix is versatile and freely available, but users are almost guaranteed to face a steep learning curve."},
+{m:1,q:"Which ITSM solution is best known for its self-service feature that lets customers resolve tickets using a knowledge base?",o:["Jira Service Desk","Zabbix","SolarWinds Web Help Desk","Zendesk Suite"],e:"Jira Service Desk, by Atlassian, is known for its efficient self-service feature and codeless setup."},
+{m:1,q:"Which ITSM software offers a live chat feature and lets customers submit queries via email, chat, social media, and phone in one console?",o:["Zendesk Suite","Zabbix","Jira Service Desk","SolarWinds Service Desk"],e:"Zendesk Suite centralizes queries across multiple channels into one unified console."},
+
+/* ---------- MODULE 2: IT SERVICE METHODS ---------- */
+{m:2,q:"What are the two worlds business organizations now compete in, according to the Virtual Value Chain concept?",o:["The marketplace and the marketspace","The workplace and the marketplace","The marketspace and cyberspace","The physical chain and the supply chain"],e:"The marketplace is the physical world for people and things, while the marketspace is the virtual world of information."},
+{m:2,q:"What is the marketspace?",o:["A virtual world of information","A physical location for installations and payments","A government regulatory body","A customer loyalty program"],e:"It contrasts with the marketplace, which is the physical world for people and things."},
+{m:2,q:"In the PLDT example, how does the company operate in both the marketplace and marketspace simultaneously?",o:["It has a physical location for services and a website offering the same services","It only accepts payments through its website","It closed its physical branches in favor of the marketspace","It uses the marketspace exclusively for advertising"],e:"PLDT offers installation requests, bill payments, and plan upgrades both physically and online."},
+{m:2,q:"What does the marketspace allow providers to collect that is difficult to get onsite?",o:["Useful information, such as through a survey","Physical inventory counts","Cash payments","Employee attendance records"],e:"This information helps improve service delivery processes and create customer value."},
+{m:2,q:"What does a physical value chain include, according to the handout?",o:["Acquiring raw materials, operations, delivery, sales and marketing, and service","Gathering, organizing, selecting, synthesizing, and distributing data","Only the sales and marketing function","Customer feedback and loyalty programs"],e:"This is the traditional value chain built from tangible business activities."},
+{m:2,q:"What does a virtual value chain comprise?",o:["The digital and virtual realms of information used to create value","Only physical raw materials","A company's retail store locations","Employee training programs"],e:"It contrasts with the physical value chain's tangible activities."},
+{m:2,q:"Which of these is one of the stated objectives of the virtual value chain?",o:["Creating direct, cost-effective interactions between value chain members and users","Reducing the number of physical retail locations","Replacing all customer service staff with automation","Increasing the price of digital services"],e:"This is one of three listed objectives of the virtual value chain."},
+{m:2,q:"What value service advantages does the virtual value chain aim to give end-users?",o:["Performance, aesthetics, security, and reliability","Lower taxes and faster shipping","Free products and unlimited returns","Exclusive access to physical stores"],e:"These four advantages are named as objectives for end-users."},
+{m:2,q:"What is the third objective of the virtual value chain regarding value delivery?",o:["Ensuring that value is created and delivered continuously","Ensuring value is only delivered once per customer","Ensuring value is delivered exclusively offline","Ensuring value delivery happens only during business hours"],e:"Continuous creation and delivery of value is the third listed objective."},
+{m:2,q:"How many components make up the virtual value chain that get applied to each stage?",o:["Five","Three","Four","Seven"],e:"The five components are Gather, Organize, Select, Synthesize, and Distribute."},
+{m:2,q:"Which of these is NOT one of the five components of the virtual value chain?",o:["Analyze","Gather","Synthesize","Distribute"],e:"The five components are Gather, Organize, Select, Synthesize, and Distribute — not Analyze."},
+{m:2,q:"What happens in Stage 1, New Processes, of the virtual value chain?",o:["Physical operations are envisioned more effectively using information","Customers are given loyalty rewards for repeat purchases","Brand ambassadors are assigned to promote products","Websites are linked to social media for marketing"],e:"PLDT's move from paper-based filing to a central computerized \u201cpaperless billing\u201d system is the example given."},
+{m:2,q:"Which PLDT example illustrates Stage 1: New Processes?",o:["Moving from a manual paper-based filing system to a central computerized database for paperless billing","Launching the Home Rewards program","Assigning brand ambassadors to promote deals","Linking their website to social media posts"],e:"Paperless billing is the New Processes example in the handout."},
+{m:2,q:"What defines Stage 2, New Knowledge, in the virtual value chain?",o:["Digital and virtual alternatives substitute for physical information gathering","New employees are hired to handle customer complaints","Physical stores are closed and replaced by warehouses","A company begins accepting only cash payments"],e:"PLDT gathers more information through its website than through physical locations at this stage."},
+{m:2,q:"Why does gathering information through a website help at the New Knowledge stage?",o:["It helps IT services gather and organize information at a larger and faster rate","It eliminates the need for customer service entirely","It guarantees higher profit margins","It replaces the need for a physical value chain"],e:"Websites linked to social media let a company market and collect information faster than physical-only channels."},
+{m:2,q:"What happens at Stage 3, New Services?",o:["New information is analyzed to discover new service needs and methods to deliver value","Old services are discontinued to cut costs","Physical retail locations are expanded","Customer complaints are ignored to save resources"],e:"PLDT's Home Rewards program, launched from analyzing customer payment behavior, is the example given."},
+{m:2,q:"What is the PLDT Home Rewards program an example of?",o:["Stage 3: New Services","Stage 1: New Processes","Stage 2: New Knowledge","Stage 4: New Relationships"],e:"Customers earn crystals to exchange for treats, bill rebates, and discounts, reflecting a new service built from customer insight."},
+{m:2,q:"What did PLDT notice about customer payment behavior that led to the Home Rewards program?",o:["Customers would rather pay online than onsite","Customers preferred paying by check","Customers avoided using the company's website entirely","Customers wanted fewer payment options"],e:"This insight led PLDT to build a system encouraging customers to keep visiting and paying on its website."},
+{m:2,q:"What is explored at Stage 4, New Relationships?",o:["Opportunities for collaboration with customers to create value","Ways to reduce the number of customer touchpoints","Methods for discontinuing unprofitable services","Approaches to hiring new IT staff"],e:"This is the last stage in the virtual value chain's four stages."},
+{m:2,q:"How might PLDT create New Relationships (Stage 4) with customers?",o:["By assigning brand ambassadors or creating customer testimonials","By closing its physical locations","By removing its Home Rewards program","By outsourcing customer service overseas"],e:"This stage opens possibilities for better and prolonged customer loyalty."},
+{m:2,q:"What perspective does the virtual value chain give, according to the handout?",o:["A perspective of service innovation that creates value from information gathered while serving customers","A perspective focused only on cost-cutting","A perspective that eliminates the need for physical value chains","A perspective limited to marketing strategy"],e:"This summarizes the overall idea behind the virtual value chain framework."},
+{m:2,q:"Which is listed as one of the Limits in the Use of Information?",o:["Invasion of Privacy","Increased Productivity","Business Alignment","Service Portfolio Management"],e:"Invasion of Privacy is one of four limits discussed, alongside Data Security, Reliability, and Fairness."},
+{m:2,q:"What risk does Invasion of Privacy describe?",o:["Massive cloud data storage can put users' personal information at risk of being searched and exposed","Users may forget their account passwords","Companies may lose physical documents in a fire","Customers may request refunds too often"],e:"Technology makes data gathering easier but also easier to misuse by third parties with malicious motives."},
+{m:2,q:"What is recommended to address Invasion of Privacy concerns?",o:["Use gathered information based on agreed terms and conditions and avoid selling it to third parties","Stop collecting any customer information entirely","Share all customer data publicly for transparency","Store data only on paper, never digitally"],e:"Selling information to third parties who could access financial transactions is specifically discouraged."},
+{m:2,q:"What is an organization responsible for under the Data Security limit?",o:["Taking the best care of user information to prevent lawsuits and federal charges","Guaranteeing that services are always free","Publishing user data annually for review","Avoiding the use of cloud storage entirely"],e:"Poor data security could expose the organization to legal consequences."},
+{m:2,q:"What practice is recommended to strengthen Data Security?",o:["Ensuring cloud and data servers are monitored and protected with heightened protocols for credible personnel only","Allowing any employee to access all servers freely","Removing password requirements to speed up access","Storing all data on personal employee devices"],e:"Restricting access to credible, authorized personnel is the recommended safeguard."},
+{m:2,q:"What does the Reliability limit warn about regarding gathered information?",o:["Users may randomly click survey answers without real thought, affecting the data's value","Servers may randomly crash during data collection","Reliable data is always more expensive to collect","Reliability only matters for financial data"],e:"Unreliable responses can alter plans for new services if not caught."},
+{m:2,q:"What is encouraged to ensure the Reliability of gathered information?",o:["Having assigned teams verify that every piece of information is valid and comes from genuine experience","Removing surveys from the data collection process entirely","Trusting all data automatically without review","Outsourcing all data verification to customers"],e:"Dedicated verification helps ensure the information reflects genuine user experience."},
+{m:2,q:"What does the Fairness limit require regarding user information?",o:["Users must always know where their information goes after accepting cookies or submitting forms","Users must pay extra for data privacy","Fairness only applies to paying customers","Fairness means treating all users identically regardless of consent"],e:"Transparency about data use builds a trusting relationship between provider and user."},
+{m:2,q:"What tool is highlighted as effective for educating and warning users under the Fairness limit?",o:["Terms and Conditions, or a separate structured agreement clause","A mandatory in-person meeting with every user","A public press release","A discount offered in exchange for data"],e:"Terms and Conditions inform users about what they are signing up for."},
+{m:2,q:"How many stages does ITSM have based on the ITIL framework, according to the ITSM Processes section?",o:["Five","Three","Four","Six"],e:"The five stages are Service Strategy, Service Design, Service Transition, Service Operation, and Continual Service Improvement."},
+{m:2,q:"What do the five ITSM processes ensure, overall?",o:["That incidents, service requests, and IT assets are addressed and managed in a streamlined way","That all IT staff receive the same salary","That software is always free to license","That customer complaints are ignored"],e:"This is the overall purpose of the ITSM process framework."},
+{m:2,q:"What is Service Strategy described as within the ITSM process framework?",o:["The basis and first step in the cooperation between IT and the organization's needs","The final stage after a service has launched","A step used only for emergency incidents","A stage focused solely on hardware purchases"],e:"It defines services to be offered and the planning process behind them."},
+{m:2,q:"Service Strategy allows organizations to focus on which kind of question?",o:["The \u201cwhys\u201d instead of the \u201chows\u201d when planning","Only the \u201chows\u201d of implementation","Neither the whys nor the hows, only the budget","The \u201cwhens\u201d of project deadlines"],e:"Strategy is about the underlying reasons and direction, not the implementation details."},
+{m:2,q:"What does Service Strategy also identify, despite IT departments often spending little time on it?",o:["Potential risks and threats to the successful delivery of services","The exact number of employees needed","The physical location of data centers","The color scheme of the company website"],e:"Risk and threat identification is a key but often under-prioritized part of Service Strategy."},
+{m:2,q:"Which sub-unit of Service Strategy assesses the market and how the organization plans to service it?",o:["Strategy Management for IT Services","Service Portfolio Management","Demand Management","Business Relationship Management"],e:"This sub-unit focuses on market assessment and service planning."},
+{m:2,q:"Which Service Strategy sub-unit analyzes the different services an organization wants to offer based on cost and value?",o:["Service Portfolio Management","Demand Management","Strategy Management for IT Services","Business Relationship Management"],e:"Service Portfolio Management structures the analysis of what services cost to deploy versus the value they bring back."},
+{m:2,q:"Which Service Strategy sub-unit scales resources to demand and defines costs for failing to meet anticipated demand?",o:["Demand Management","Service Portfolio Management","Compliance Management","Risk Management"],e:"Demand Management requires a specified definition of the organization's service and its cost implications."},
+{m:2,q:"Which Service Strategy sub-unit focuses on identifying customers and understanding their expectations through feedback registries and complaint logs?",o:["Business Relationship Management","Strategy Management for IT Services","Availability Management","Supplier Management"],e:"Business Relationship Management covers surveys, feedback registries, and complaint logs."},
+{m:2,q:"What is Service Design, within the ITSM framework?",o:["The stage when ideas from Service Strategy begin to take form as a proposed IT solution","The final review stage after a service is retired","A stage only concerned with graphic design","The stage where employees are hired"],e:"Its result is a proposed IT solution that fits the determined objectives."},
+{m:2,q:"What risk does the handout warn about if Service Design is neglected?",o:["The organization risks wasting money and manpower on a subpar IT solution","The organization will automatically fail compliance audits","The IT team will lose access to the network","Customer service tickets will be permanently deleted"],e:"A neglected design phase can produce a solution that doesn't directly address the organization's needs."},
+{m:2,q:"Why is spending extra time in Service Design considered cost-effective?",o:["It's much less expensive than fixing a botched rollout during later processes","It guarantees a service will never need updates","It removes the need for Service Transition entirely","It eliminates the need for a service desk"],e:"Planning ahead in Service Design avoids costlier fixes down the line."},
+{m:2,q:"Which Service Design sub-unit ensures the organization remains aware of all commitments, contracts, and obligations?",o:["Service Level Management","Risk Management","Capacity Management","Compliance Management"],e:"Service Level Management tracks commitments and contractual obligations."},
+{m:2,q:"Which Service Design sub-unit is described as the process of plotting risk against reward?",o:["Risk Management","Capacity Management","Availability Management","Supplier Management"],e:"Risk Management weighs potential risk against potential reward."},
+{m:2,q:"Which Service Design sub-unit analyzes requirements such as speed, bandwidth, and service space?",o:["Capacity Management","Availability Management","Compliance Management","Service Level Management"],e:"Capacity Management looks at quantitative resource needs based on the service delivered."},
+{m:2,q:"Which Service Design sub-unit focuses on whether an IT department has the personnel, tools, and infrastructure to complete a project?",o:["Availability Management","Capacity Management","Risk Management","Supplier Management"],e:"Availability Management focuses on qualitative capacity rather than raw numbers."},
+{m:2,q:"Which Service Design sub-unit reviews internal and external regulations from company policy to federal law?",o:["Compliance Management","Service Level Management","Risk Management","Demand Management"],e:"Compliance Management is described as the legal side of the Service Design process."},
+{m:2,q:"Which Service Design sub-unit ensures external suppliers of IT resources can meet the demands of the design?",o:["Supplier Management","Capacity Management","Business Relationship Management","Change Management"],e:"Supplier Management confirms external suppliers are equipped to meet Service Design's needs."},
+{m:2,q:"What happens during Service Transition?",o:["Real action is taken to implement the proposed service","The service is permanently discontinued","Only marketing materials for the service are created","Employees vote on whether to approve the service"],e:"This is the point where systems and people adapt to a new service delivery system."},
+{m:2,q:"What risks does Service Transition open the organization to?",o:["Service interruptions, data security breaches, and human error","Increased advertising costs only","Loss of intellectual property rights","Permanent loss of customer trust"],e:"These risks arise as people learn to use a new service delivery system."},
+{m:2,q:"What should Service Transition always result in, ideally?",o:["Superior value and quality service to the organization, delivered as seamlessly as possible","The complete removal of the previous system with no transition period","A reduction in IT staff","A permanent price increase for customers"],e:"Seamlessness for service recipients is the goal of Service Transition."},
+{m:2,q:"Which Service Transition sub-unit implements new IT services while lessening disruption to existing ones?",o:["Change Management","Release & Deployment Management","Knowledge Management","Event Management"],e:"Change Management focuses on minimizing disruption during implementation."},
+{m:2,q:"Which Service Transition sub-unit handles the schedule for a release and relies on limited testing to find the best rollout method?",o:["Release & Deployment Management","Change Management","Service & Validation Testing","Access Management"],e:"This sub-unit sets up the new service effectively and promptly while minimizing disruption."},
+{m:2,q:"Which Service Transition sub-unit assures that enough IT resources are on hand to provide high-quality service continually?",o:["Service & Validation Testing","Release & Deployment Management","Service Assets & Configuration Management","Problem Management"],e:"Service & Validation Testing confirms resource readiness for continuous quality service."},
+{m:2,q:"Which Service Transition sub-unit ensures necessary IT assets are accessible, effectively deployed, and sustainable?",o:["Service Assets & Configuration Management","Knowledge Management","Capacity Management","Demand Management"],e:"This sub-unit is about the accessibility and sustainability of IT assets."},
+{m:2,q:"Which Service Transition sub-unit collects, organizes, and stores data to avoid wasting time recovering already-obtained knowledge?",o:["Knowledge Management","Event Management","Incident Management","IT Operations Control"],e:"Knowledge Management prevents the organization from having to re-obtain information it already has."},
+{m:2,q:"What is Service Operation focused on?",o:["The recurring, day-to-day delivery of organization services to users","A one-time review conducted at project completion","Only the initial design of a new service","Marketing the service to new customers"],e:"It patterns a reliable, repeatable delivery of expected services."},
+{m:2,q:"What does Service Operation include to address disruptions?",o:["Substantial contingency plans to address anomalies, errors, and disruptions","A permanent shutdown procedure for failed services","A ban on reporting incidents twice","An automatic price refund policy"],e:"Contingency planning helps Service Operation handle unexpected problems."},
+{m:2,q:"Which Service Operation sub-unit monitors and sets standards for \u201cevents\u201d or system changes that might prompt IT action?",o:["Event Management","Incident Management","Problem Management","Access Management"],e:"Event Management watches for changes in system configuration that need attention."},
+{m:2,q:"Which Service Operation sub-unit undergoes analysis and escalation of incidents and restores services after an interruption?",o:["Incident Management","Event Management","Request Fulfillment","IT Operations Control"],e:"Incident Management is responsible for restoring service after disruptions."},
+{m:2,q:"Which Service Operation sub-unit responds to lesser user concerns such as password resets and basic support?",o:["Request Fulfillment","Access Management","Problem Management","Event Management"],e:"Request Fulfillment handles smaller, routine user requests."},
+{m:2,q:"Which Service Operation sub-unit verifies user identity and credentials for proper authorization?",o:["Access Management","Request Fulfillment","Problem Management","Knowledge Management"],e:"Access Management confirms users hold proper authorization to use a service."},
+{m:2,q:"Which Service Operation sub-unit minimizes the damage of an incident and facilitates resolutions?",o:["Problem Management","Incident Management","Event Management","IT Operations Control"],e:"Problem Management focuses on reducing damage and enabling resolution, distinct from Incident Management's restoration role."},
+{m:2,q:"Which Service Operation sub-unit monitors IT infrastructure and supports basic day-to-day tasks to keep service deliverable?",o:["IT Operations Control","Access Management","Request Fulfillment","Change Management"],e:"IT Operations Control keeps the infrastructure running for continuous service delivery."},
+{m:2,q:"What does Continual Service Improvement (CSI) evaluate and improve?",o:["All the other ITSM processes, through a feedback loop","Only the Service Strategy stage","Only employee performance reviews","Only the pricing of services"],e:"CSI sharpens service quality by gathering information and feeding lessons back into the system."},
+{m:2,q:"How does CSI sharpen the quality of services delivered?",o:["By gathering information, extracting value and lessons, and incorporating them back into the system","By discontinuing underperforming services immediately","By outsourcing quality control to a third party","By reducing the number of feedback channels available"],e:"This feedback loop is the core mechanism of Continual Service Improvement."},
+{m:2,q:"Which CSI aspect gives out survey requests to users for purchased products and services?",o:["Service Review","Process Evaluation","Definition of CSI Initiatives","Demand Management"],e:"Service Review directly surveys users about what they've purchased or used."},
+{m:2,q:"Which CSI aspect includes benchmarking and continuity in maintaining an ongoing stream of process data?",o:["Process Evaluation","Service Review","Definition of CSI Initiatives","Capacity Management"],e:"Process Evaluation maintains an ongoing data stream about how effective service processes are."},
+{m:2,q:"What does the Definition of CSI Initiatives aspect do?",o:["Collects data from Service Review and Process Evaluation to define initiatives that improve service","Removes the need for further service reviews","Sets the annual budget for the IT department","Determines which employees receive bonuses"],e:"It turns gathered data into concrete initiatives for improvement."},
+{m:2,q:"CSI Initiatives can be classified as internal or external. What does an external initiative involve?",o:["Users doing a new feedback set","Only the IT team, without user involvement","A change to internal team structure only","A private review conducted by executives"],e:"External initiatives specifically involve users providing new feedback, unlike internal ones which stay within the IT team."}
+
+];
+
+/* ======================= state ======================= */
+const $ = id => document.getElementById(id);
+let deck = [], idx = 0, score = 0, answered = false, missed = [];
+
+/* ======================= theme ======================= */
+const SUN = '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/>';
+const MOON = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+function setTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  $("themeIcon").innerHTML = t === "dark" ? SUN : MOON;
+  $("themeBtn").setAttribute("aria-label", t === "dark" ? "Switch to light mode" : "Switch to dark mode");
+}
+$("themeBtn").addEventListener("click", () => {
+  const t = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  setTheme(t);
+  try{ localStorage.setItem("reviewerTheme", t); }catch(e){}
+});
+let savedTheme = null;
+try{ savedTheme = localStorage.getItem("reviewerTheme"); }catch(e){}
+setTheme(savedTheme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+
+/* ======================= helpers ======================= */
+function shuffle(a){
+  const r = a.slice();
+  for(let i = r.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [r[i], r[j]] = [r[j], r[i]];
+  }
+  return r;
+}
+function show(name){
+  ["startScreen","quizScreen","resultScreen"].forEach(s => $(s).classList.add("hide"));
+  $(name).classList.remove("hide");
+  $("keyHint").classList.toggle("hide", name !== "quizScreen");
+}
+
+/* ======================= start ======================= */
+$("cAll").textContent = BANK.length;
+$("c1").textContent = BANK.filter(q => q.m === 1).length;
+$("c2").textContent = BANK.filter(q => q.m === 2).length;
+
+document.querySelectorAll(".deck-btn").forEach(b => {
+  b.addEventListener("click", () => {
+    const mod = b.dataset.mod;
+    const pool = mod === "all" ? BANK.slice() : BANK.filter(q => q.m === Number(mod));
+    begin(pool);
+  });
+});
+
+function begin(pool){
+  deck = $("shuffleBox").checked ? shuffle(pool) : pool.slice();
+  idx = 0; score = 0; missed = [];
+  $("qTotal").textContent = deck.length;
+  show("quizScreen");
+  render();
+}
+
+/* ======================= question ======================= */
+function render(){
+  answered = false;
+  const q = deck[idx];
+  $("qNow").textContent = idx + 1;
+  $("score").textContent = score;
+  $("railFill").style.width = (idx / deck.length * 100) + "%";
+  $("modBadge").textContent = q.m === 1 ? "Introduction to ITSM" : "IT Service Methods";
+  $("qText").textContent = q.q;
+  $("fbSlot").innerHTML = "";
+  $("nextRow").classList.add("hide");
+  $("nextBtn").textContent = idx === deck.length - 1 ? "See your results" : "Next question";
+
+  const order = shuffle([0,1,2,3]);
+  const box = $("choices");
+  box.innerHTML = "";
+  order.forEach((orig, pos) => {
+    const btn = document.createElement("button");
+    btn.className = "choice";
+    btn.dataset.correct = (orig === 0) ? "1" : "0";
+    btn.innerHTML = '<span class="key">' + "ABCD"[pos] + '</span><span>' + escapeHTML(q.o[orig]) + '</span>';
+    btn.addEventListener("click", () => answer(btn));
+    box.appendChild(btn);
+  });
+}
+function escapeHTML(s){
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+/* ======================= answering ======================= */
+function answer(btn){
+  if(answered) return;
+  answered = true;
+  const q = deck[idx];
+  const right = btn.dataset.correct === "1";
+  const all = [...$("choices").children];
+
+  all.forEach(b => {
+    b.disabled = true;
+    if(b.dataset.correct === "1") b.classList.add("correct");
+    else if(b === btn) b.classList.add("wrong");
+    else b.classList.add("dim");
+  });
+
+  if(right){
+    score++;
+    $("score").textContent = score;
+  } else {
+    missed.push({
+      q: q.q,
+      yours: btn.textContent.slice(1).trim(),
+      right: q.o[0],
+      e: q.e,
+      ref: q
+    });
+  }
+
+  const fb = document.createElement("div");
+  fb.className = "fb " + (right ? "good" : "bad");
+  fb.innerHTML = "<strong>" + (right ? "Correct" : "The answer is: " + escapeHTML(q.o[0])) + "</strong>" + escapeHTML(q.e);
+  $("fbSlot").appendChild(fb);
+
+  $("nextRow").classList.remove("hide");
+  $("nextBtn").focus({preventScroll:true});
+}
+
+$("nextBtn").addEventListener("click", () => {
+  if(idx === deck.length - 1) finish();
+  else { idx++; render(); }
+});
+
+/* ======================= results ======================= */
+function finish(){
+  const total = deck.length;
+  const pct = Math.round(score / total * 100);
+  $("finalScore").textContent = score;
+  $("finalOf").textContent = " / " + total;
+
+  let msg;
+  if(pct === 100) msg = "Perfect run. Nothing left to review here.";
+  else if(pct >= 85) msg = "Solid — " + pct + "% right. Just tighten up the few below.";
+  else if(pct >= 65) msg = pct + "% right. Worth another pass over the ones you missed.";
+  else msg = pct + "% right. Read back through the handout, then run this again.";
+  $("verdict").textContent = msg;
+
+  $("retryMissed").classList.toggle("hide", missed.length === 0);
+  $("missedWrap").classList.toggle("hide", missed.length === 0);
+  $("missedTitle").textContent = "What to go back over (" + missed.length + ")";
+  if(missed.length){
+    $("retryMissed").textContent = "Retry the " + missed.length + " you missed";
+    $("missedList").innerHTML = missed.map(m =>
+      '<div class="miss"><p>' + escapeHTML(m.q) + '</p>' +
+      '<span class="yours">You picked: ' + escapeHTML(m.yours) + '</span>' +
+      '<span class="right">Correct: ' + escapeHTML(m.right) + '</span></div>'
+    ).join("");
+  }
+  show("resultScreen");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+$("retryMissed").addEventListener("click", () => begin(missed.map(m => m.ref)));
+$("restartBtn").addEventListener("click", () => show("startScreen"));
+
+/* ======================= keyboard ======================= */
+document.addEventListener("keydown", e => {
+  if($("quizScreen").classList.contains("hide")) return;
+  if(e.key === "Enter" && answered){ e.preventDefault(); $("nextBtn").click(); return; }
+  const n = "1234".indexOf(e.key);
+  const l = "abcd".indexOf(e.key.toLowerCase());
+  const pick = n > -1 ? n : l;
+  if(pick > -1 && !answered){
+    const b = $("choices").children[pick];
+    if(b) b.click();
+  }
+});
+
+show("startScreen");
+</script>
+</body>
+</html>
 
