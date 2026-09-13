@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wireless &amp; Mobile Attacks Reviewer — Countermeasures</title>
+<style>
+  :root{
+    --bg:#EAEDF5;
+    --bg2:#F4F6FB;
+    --card:#FFFFFF;
+    --ink:#151721;
+    --muted:#616880;
+    --faint:#8B92A8;
+    --line:#E1E5EF;
+    --line-strong:#CDD3E2;
+    --accent:#4B3BD6;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#EBE8FC;
+    --ok:#0B7A57;
+    --ok-soft:#E0F2EA;
+    --ok-line:#8FD3BB;
+    --no:#B62F47;
+    --no-soft:#FBE7EB;
+    --no-line:#EDA7B4;
+    --shadow:0 1px 2px rgba(20,24,50,.06), 0 12px 28px -14px rgba(20,24,50,.28);
+  }
+  html[data-theme="dark"]{
+    --bg:#0C0E15;
+    --bg2:#12151E;
+    --card:#171A25;
+    --ink:#E9EBF3;
+    --muted:#98A0B6;
+    --faint:#6E7690;
+    --line:#252A38;
+    --line-strong:#333A4C;
+    --accent:#9E8FFF;
+    --accent-ink:#14101F;
+    --accent-soft:#221E3B;
+    --ok:#4CCB9C;
+    --ok-soft:#10261F;
+    --ok-line:#255A48;
+    --no:#FF8095;
+    --no-soft:#2A1219;
+    --no-line:#5C2733;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 18px 34px -18px rgba(0,0,0,.8);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--bg);
+    background-image:radial-gradient(120% 60% at 50% 0%, var(--bg2) 0%, var(--bg) 62%);
+    background-attachment:fixed;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    -webkit-text-size-adjust:100%;
+    line-height:1.5;
+    min-height:100vh;
+    padding:0 16px calc(28px + env(safe-area-inset-bottom));
+  }
+  .wrap{max-width:600px;margin:0 auto;}
+
+  /* ---------- header ---------- */
+  header{
+    display:flex;align-items:flex-start;gap:12px;
+    padding:22px 2px 18px;
+  }
+  .mark{flex:none;width:34px;height:34px;color:var(--accent);margin-top:2px;}
+  .titles{flex:1;min-width:0;}
+  .back-link{
+    display:inline-block;
+    font-size:.75rem;font-weight:650;
+    color:var(--faint);text-decoration:none;
+    margin-bottom:5px;
+    transition:color .15s ease;
+  }
+  .back-link:hover{color:var(--accent);}
+  h1{
+    margin:0;
+    font-size:1.5rem;
+    font-weight:800;
+    letter-spacing:-.024em;
+    line-height:1.15;
+  }
+  .sub{
+    margin:4px 0 0;
+    font-size:.8125rem;
+    color:var(--muted);
+    letter-spacing:.005em;
+  }
+  .theme-btn{
+    flex:none;
+    width:38px;height:38px;
+    display:grid;place-items:center;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:var(--card);
+    color:var(--muted);
+    cursor:pointer;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .theme-btn:hover{color:var(--accent);border-color:var(--line-strong);}
+  .theme-btn svg{width:17px;height:17px;}
+
+  /* ---------- card ---------- */
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .pad{padding:22px;}
+  @media (max-width:420px){ .pad{padding:18px;} }
+
+  /* ---------- start screen ---------- */
+  .lede{
+    margin:0 0 20px;
+    font-size:.9375rem;
+    color:var(--muted);
+    max-width:46ch;
+  }
+  .deck{display:grid;gap:10px;}
+  .deck-btn{
+    display:flex;align-items:center;gap:14px;
+    width:100%;text-align:left;
+    padding:15px 16px;
+    background:transparent;
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    color:inherit;font:inherit;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .deck-btn:hover{border-color:var(--accent);background:var(--accent-soft);}
+  .deck-n{
+    flex:none;
+    min-width:34px;
+    text-align:center;
+    font-size:1.0625rem;
+    font-weight:800;
+    color:var(--accent);
+    font-variant-numeric:tabular-nums;
+    letter-spacing:-.02em;
+  }
+  .deck-t{display:block;font-weight:650;font-size:.9375rem;}
+  .deck-d{display:block;font-size:.8125rem;color:var(--muted);margin-top:3px;line-height:1.4;}
+  .opts-row{
+    display:flex;align-items:center;gap:9px;
+    margin-top:18px;font-size:.8125rem;color:var(--muted);
+    cursor:pointer;user-select:none;
+  }
+  .opts-row input{accent-color:var(--accent);width:16px;height:16px;cursor:pointer;}
+
+  /* ---------- quiz meta ---------- */
+  .meta{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-size:.8125rem;color:var(--muted);
+    font-variant-numeric:tabular-nums;
+  }
+  .meta b{color:var(--ink);font-weight:650;}
+  .rail{
+    height:5px;border-radius:99px;background:var(--line);
+    margin:11px 0 20px;overflow:hidden;
+  }
+  .rail span{
+    display:block;height:100%;width:0;border-radius:99px;
+    background:var(--accent);
+    transition:width .32s cubic-bezier(.4,0,.2,1);
+  }
+  .badge{
+    display:inline-block;
+    padding:4px 11px;border-radius:99px;
+    background:var(--accent-soft);color:var(--accent);
+    font-size:.6875rem;font-weight:700;letter-spacing:.04em;
+    margin-bottom:14px;
+  }
+  .qtext{
+    margin:0 0 18px;
+    font-size:1.1875rem;
+    font-weight:700;
+    letter-spacing:-.012em;
+    line-height:1.34;
+  }
+
+  /* ---------- options ---------- */
+  .choices{display:grid;gap:9px;}
+  .choice{
+    display:flex;align-items:flex-start;gap:12px;
+    width:100%;text-align:left;
+    padding:13px 14px;
+    background:transparent;
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    color:inherit;
+    font:inherit;font-size:.9375rem;line-height:1.42;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease, opacity .2s ease;
+  }
+  .choice:hover:not(:disabled){border-color:var(--line-strong);background:var(--bg2);}
+  .choice:disabled{cursor:default;}
+  .key{
+    flex:none;
+    width:24px;height:24px;margin-top:-1px;
+    display:grid;place-items:center;
+    border-radius:8px;
+    background:var(--line);
+    color:var(--muted);
+    font-size:.75rem;font-weight:700;
+    transition:background .15s ease,color .15s ease;
+  }
+  .choice.correct{border-color:var(--ok-line);background:var(--ok-soft);}
+  .choice.correct .key{background:var(--ok);color:var(--card);}
+  .choice.wrong{border-color:var(--no-line);background:var(--no-soft);}
+  .choice.wrong .key{background:var(--no);color:var(--card);}
+  .choice.dim{opacity:.42;}
+
+  /* ---------- feedback ---------- */
+  .fb{
+    margin-top:16px;padding:13px 15px;
+    border-left:3px solid var(--accent);
+    border-radius:0 12px 12px 0;
+    background:var(--bg2);
+    font-size:.875rem;line-height:1.55;
+    color:var(--muted);
+    animation:rise .22s ease-out;
+  }
+  .fb.good{border-left-color:var(--ok);}
+  .fb.bad{border-left-color:var(--no);}
+  .fb strong{display:block;color:var(--ink);font-weight:700;margin-bottom:3px;font-size:.9375rem;}
+  @keyframes rise{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+
+  /* ---------- buttons ---------- */
+  .actions{display:flex;gap:10px;margin-top:18px;}
+  .btn{
+    flex:1;
+    padding:13px 18px;
+    border-radius:13px;border:1.5px solid transparent;
+    font:inherit;font-size:.9375rem;font-weight:650;
+    cursor:pointer;
+    transition:filter .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .btn-primary{background:var(--accent);color:var(--accent-ink);}
+  .btn-primary:hover{filter:brightness(1.08);}
+  .btn-ghost{background:transparent;color:var(--muted);border-color:var(--line);}
+  .btn-ghost:hover{border-color:var(--line-strong);color:var(--ink);}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  /* ---------- results ---------- */
+  .score-big{
+    font-size:3.25rem;font-weight:800;letter-spacing:-.04em;line-height:1;
+    font-variant-numeric:tabular-nums;
+  }
+  .score-of{font-size:1.125rem;color:var(--faint);font-weight:600;}
+  .verdict{margin:10px 0 0;color:var(--muted);font-size:.9375rem;max-width:44ch;}
+  .missed{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;}
+  .missed h3{margin:0 0 12px;font-size:.875rem;font-weight:700;color:var(--muted);}
+  .miss{padding:12px 0;border-bottom:1px solid var(--line);font-size:.875rem;}
+  .miss:last-child{border-bottom:0;}
+  .miss p{margin:0 0 5px;font-weight:650;line-height:1.4;}
+  .miss .yours{color:var(--no);}
+  .miss .right{color:var(--ok);}
+  .miss span{display:block;line-height:1.45;}
+
+  .hint{
+    text-align:center;margin:16px 0 0;
+    font-size:.75rem;color:var(--faint);
+  }
+  .hint kbd{
+    font-family:inherit;font-size:.6875rem;font-weight:700;
+    border:1px solid var(--line-strong);border-radius:5px;
+    padding:1px 5px;color:var(--muted);
+  }
+  @media (max-width:640px){ .hint.keys{display:none;} }
+  footer{text-align:center;margin:18px 0 0;font-size:.75rem;color:var(--faint);}
+  .hide{display:none !important;}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+      <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+      <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+      <circle cx="12" cy="20" r="1"/>
+    </svg>
+    <div class="titles">
+      <a href="../" class="back-link">&larr; All reviewers</a>
+      <h1>Wireless &amp; Mobile Attacks</h1>
+      <p class="sub">Wireless Attacks + Mobile Attacks &amp; Countermeasures</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" aria-label="Switch to dark mode" title="Switch theme">
+      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </header>
+
+  <!-- ===== START ===== -->
+  <section class="card hide" id="startScreen">
+    <div class="pad">
+      <p class="lede">Pick a set and answer as you go. You get the reason for every answer right after you tap, so a wrong one still teaches you something.</p>
+      <div class="deck">
+        <button class="deck-btn" data-mod="all">
+          <span class="deck-n" id="cAll">0</span>
+          <span><span class="deck-t">Everything</span><span class="deck-d">Both handouts, mixed together</span></span>
+        </button>
+        <button class="deck-btn" data-mod="1">
+          <span class="deck-n" id="c1">0</span>
+          <span><span class="deck-t">Wireless Attacks</span><span class="deck-d">Handout 1 — encryption, Wi-Fi attacks, tools, Bluetooth</span></span>
+        </button>
+        <button class="deck-btn" data-mod="2">
+          <span class="deck-n" id="c2">0</span>
+          <span><span class="deck-t">Mobile Attacks</span><span class="deck-d">Handout 2 — device, network, cloud attacks, OWASP Top 10</span></span>
+        </button>
+      </div>
+      <label class="opts-row"><input type="checkbox" id="shuffleBox" checked> Shuffle the order each time</label>
+    </div>
+  </section>
+
+  <!-- ===== QUIZ ===== -->
+  <section class="card hide" id="quizScreen">
+    <div class="pad">
+      <div class="meta">
+        <span>Question <b id="qNow">1</b> / <span id="qTotal">0</span></span>
+        <span>Score <b id="score">0</b></span>
+      </div>
+      <div class="rail"><span id="railFill"></span></div>
+      <div class="badge" id="modBadge">Module 1</div>
+      <h2 class="qtext" id="qText">—</h2>
+      <div class="choices" id="choices"></div>
+      <div id="fbSlot"></div>
+      <div class="actions hide" id="nextRow">
+        <button class="btn btn-primary" id="nextBtn">Next question</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RESULTS ===== -->
+  <section class="card hide" id="resultScreen">
+    <div class="pad">
+      <div><span class="score-big" id="finalScore">0</span><span class="score-of" id="finalOf"> / 0</span></div>
+      <p class="verdict" id="verdict"></p>
+      <div class="actions">
+        <button class="btn btn-primary" id="retryMissed">Retry the ones you missed</button>
+      </div>
+      <div class="actions" style="margin-top:10px">
+        <button class="btn btn-ghost" id="restartBtn">Back to the start</button>
+      </div>
+      <div class="missed hide" id="missedWrap">
+        <h3 id="missedTitle">What to go back over</h3>
+        <div id="missedList"></div>
+      </div>
+    </div>
+  </section>
+
+  <p class="hint keys" id="keyHint">Press <kbd>1</kbd>–<kbd>4</kbd> to answer, <kbd>Enter</kbd> to continue</p>
+  <footer>Works offline. Nothing is sent anywhere.</footer>
+</div>
+
+<script>
+/* =======================================================================
+   Question bank.  Authoring rule: o[0] is ALWAYS the correct answer.
+   The options get shuffled at runtime, so order here doesn't matter.
+   m = module (1 = Handout 1, 2 = Handout 2)
+   ======================================================================= */
+const BANK = [
+
+/* ---------- MODULE 1: WIRELESS ATTACKS ---------- */
+{m:1,q:"What does GSM stand for in wireless terminology?",o:["Global System for Mobile Communications","General System Management","Global Signal Modulation","Ground Station Management"],e:"GSM is a universal system used for mobile data transmission in wireless networks worldwide."},
+{m:1,q:"What does Bandwidth describe in a wireless network?",o:["The amount of information that may be broadcast over a connection","The physical distance an AP can cover","The number of devices that can connect to an AP","The encryption strength of a network"],e:"Bandwidth usually refers to data transfer rate, measured in bits per second (bps)."},
+{m:1,q:"What role does an Access Point (AP) play?",o:["It connects wireless devices to a wireless or wired network, acting as a switch or hub","It encrypts all traffic on a wireless network","It assigns IP addresses to wired devices only","It blocks unauthorized devices automatically"],e:"An AP lets wireless devices connect through standards like Bluetooth and Wi-Fi."},
+{m:1,q:"What is a BSSID?",o:["The MAC address of an AP or base station that has set up a basic service set","A 32-character network name chosen by the user","The bandwidth limit set on a router","A password used to join a WLAN"],e:"BSSID identifies the specific AP or base station via its MAC address."},
+{m:1,q:"What does the ISM Band refer to?",o:["A set of frequencies used by international industrial, scientific, and medical communities","A band reserved exclusively for military communications","The frequency used only by Bluetooth devices","A band used for satellite television"],e:"ISM stands for Industrial, Scientific, and Medical."},
+{m:1,q:"What is a Hotspot?",o:["A place where wireless networks are available for public use","A device that boosts Wi-Fi signal strength","A type of wireless encryption","An unauthorized access point"],e:"Hotspots are public-use Wi-Fi locations."},
+{m:1,q:"What is Association in a wireless network?",o:["The process of connecting a wireless device to an AP","The process of encrypting data before transmission","The process of assigning an SSID to a network","The process of authenticating a user's password"],e:"Association is specifically about a device connecting to an access point."},
+{m:1,q:"What is an SSID?",o:["A 32-alphanumeric-character unique identifier for a WLAN","A password required to access a wireless router","The MAC address of a wireless device","A type of encryption algorithm"],e:"Devices must use the same SSID as the network to establish a connection."},
+{m:1,q:"What does OFDM do?",o:["Splits a signal into multiple orthogonal carrier frequencies to support higher bit rates","Encrypts wireless traffic using a shared key","Filters unauthorized devices from a network","Boosts signal range using repeaters"],e:"Orthogonal Frequency-division Multiplexing encodes data across multiple carrier frequencies."},
+{m:1,q:"What does MIMO-OFDM influence?",o:["The spectral efficiency of 4G and 5G wireless communication services","The physical size of a wireless router","The cost of wireless equipment","The color-coding of network cables"],e:"It reduces interference and increases channel robustness for 4G/5G services."},
+{m:1,q:"What technique does Direct-sequence Spread Spectrum (DSSS) use?",o:["Multiplying the original data signal with a pseudo-random noise-spreading code","Switching a carrier rapidly among many frequency channels","Splitting a signal into orthogonal carrier frequencies","Encrypting data using a 256-bit cipher"],e:"DSSS protects signals against interference or jamming using a noise-spreading code."},
+{m:1,q:"What is another name for Frequency-hopping Spread Spectrum (FHSS)?",o:["Frequency-hopping code-division multiple access (FH-CDMA)","Direct-sequence spread spectrum (DSSS)","Orthogonal frequency-division multiplexing (OFDM)","Multiple input, multiple output (MIMO)"],e:"FHSS rapidly switches a carrier among frequency channels, decreasing interception or jamming efficiency."},
+{m:1,q:"How is a wireless network defined in the handout?",o:["An unbounded data communication system using radio-frequency technology to communicate with devices","A network that requires physical cables between all devices","A network limited to a single building","A system exclusively used for mobile phone calls"],e:"It uses EM waves to interconnect points without establishing a physical connection."},
+{m:1,q:"Which IEEE standard does Wi-Fi refer to?",o:["IEEE 802.11","IEEE 802.3","IEEE 802.15","IEEE 802.16"],e:"Wi-Fi is a WLAN based on the IEEE 802.11 standard."},
+{m:1,q:"Which techniques does Wi-Fi use to establish a connection between transmitter and receiver?",o:["DSSS, FHSS, infrared, and OFDM","TCP, UDP, and IP only","WEP, WPA, and WPA2 only","Bluetooth and ZigBee only"],e:"These four techniques help establish the wireless connection."},
+{m:1,q:"Which of these is listed as an advantage of wireless networks?",o:["Installation is fast and easy without wiring through walls and ceilings","Bandwidth always improves as more devices connect","Security always exceeds expectations","Electronic equipment never interferes with the signal"],e:"Ease of installation without extensive wiring is a key advantage."},
+{m:1,q:"Which of these is listed as a disadvantage of wireless networks?",o:["The bandwidth suffers as the number of devices in the network increases","Installation always requires extensive wiring","Public spaces cannot offer Internet through WLANs","Wireless networks never need new hardware upgrades"],e:"More connected devices can degrade available bandwidth."},
+{m:1,q:"What distinguishes a Software AP (SAP) from a Hardware AP (HAP)?",o:["SAPs run on a computer with a wireless NIC, while HAPs support most wireless features directly","SAPs are always faster than HAPs","HAPs cannot connect to a wired network","SAPs require no wireless network interface card"],e:"Both are types of APs used to extend a wired network wirelessly."},
+{m:1,q:"What feature does the Multiple Access Points network type enable, thanks to overlapping AP coverage?",o:["Roaming — the ability for users to move around seamlessly","Ad-hoc device pairing without any AP","Automatic encryption key rotation","Unlimited bandwidth for all connected devices"],e:"Overlapping wireless areas between neighboring APs let users roam seamlessly."},
+{m:1,q:"What is described as a complex task in a LAN-to-LAN Wireless Network?",o:["Interconnecting LANs over wireless connections","Connecting a single computer to one AP","Setting up a home Wi-Fi router","Changing a network's SSID"],e:"While hardware APs can interconnect, doing so over wireless links is complex."},
+{m:1,q:"Which devices does a 3G/4G Hotspot provide Wi-Fi access to?",o:["MP3 players, notebooks, tablets, cameras, PDAs, and netbooks","Only smartphones running a specific OS","Only devices within a corporate LAN","Only devices with a wired Ethernet port"],e:"3G/4G hotspots extend Wi-Fi access to a wide range of Wi-Fi-enabled devices."},
+{m:1,q:"What frequency-hopping methods does the base 802.11 standard use?",o:["FHSS or DSSS","OFDM only","MIMO only","AES only"],e:"The original 802.11 (Wi-Fi) standard applies FHSS or DSSS as its frequency-hopping spectrum."},
+{m:1,q:"What is notable about 802.11a compared to the original standard?",o:["It operates in the 5 GHz band with up to 54 Mbps but is more sensitive to walls and obstacles","It operates only in the 2.4 GHz band with unlimited range","It removed support for OFDM entirely","It is incompatible with all other 802.11 amendments"],e:"802.11a trades obstacle sensitivity for higher speed via OFDM in the 5 GHz band."},
+{m:1,q:"What modulation does 802.11b use, and in which band?",o:["Direct-sequence spread spectrum (DSSS) in the 2.4 GHz ISM band","Orthogonal frequency-division multiplexing in the 5 GHz band","Frequency-hopping in the 60 GHz band","MIMO-OFDM in the 900 MHz band"],e:"802.11b, created in 1999, supports up to 11 Mbps using DSSS."},
+{m:1,q:"What does 802.11d add to the 802.11a and 802.11b standards?",o:["Support for regulatory domains, set in the MAC layer","Support for gigabit-speed data transfer","Support for Bluetooth pairing","Support for a new 60 GHz physical layer"],e:"802.11d enhances 802.11a/b with regulatory domain specifications."},
+{m:1,q:"What is IEEE 802.11e designed to ensure?",o:["Quality of service (QoS) for real-time applications like voice, VoIP, and video","Backward compatibility with 802.11b devices only","A new encryption standard for enterprise networks","Extended range for IoT communication"],e:"802.11e defines mechanisms at the MAC layer to support time-sensitive applications."},
+{m:1,q:"Why is 802.11g compatible with 802.11b devices?",o:["It uses the same 2.4 GHz band while adding OFDM for higher speed","It abandons the 2.4 GHz band entirely","It only supports enterprise authentication","It requires a hardware adapter to bridge the two"],e:"802.11g devices can work directly with an 802.11b AP because they share the same band."},
+{m:1,q:"What security protocols did 802.11i introduce?",o:["Temporal Key Integrity Protocol (TKIP) and Advanced Encryption Standard (AES)","WEP and LEAP","RADIUS and PEAP only","GSM and CDMA encryption"],e:"802.11i improved WLAN security through these two new encryption protocols."},
+{m:1,q:"What technology does 802.11n add to enhance 802.11g?",o:["Multiple-input multiple-output (MIMO) antennas","A new 60 GHz physical layer","Demand priority protocol","ZigBee mesh networking"],e:"802.11n works in both the 2.4 GHz and 5 GHz bands using MIMO."},
+{m:1,q:"What is 802.11ah also known as, and what does it support?",o:["Wi-Fi HaLow; it supports IoT communication with extended range on 900 MHz bands","Wi-Fi Direct; it supports device-to-device pairing only","Wi-Fi 6; it supports gigabit throughput only","Wi-Fi Aware; it supports proximity discovery only"],e:"802.11ah offers wider coverage and higher data rates than earlier standards for IoT use."},
+{m:1,q:"What benefit does 802.11ac provide over 802.11n?",o:["A faster, more reliable high-throughput network at 5 GHz with Gigabit networking","Lower power consumption for IoT devices","Compatibility with 802.3 Ethernet only","A dedicated frequency band for Bluetooth"],e:"802.11ac focuses on high-throughput, gigabit-speed wireless networking."},
+{m:1,q:"What spectrum does 802.11ad operate on, and what is notable about its speed?",o:["The 60 GHz spectrum, with much higher data propagation speed than 2.4/5 GHz standards","The 900 MHz spectrum, with the lowest speed of any standard","The 2.4 GHz spectrum, matching 802.11b exactly","The 5 GHz spectrum, identical to 802.11ac"],e:"802.11ad includes a new physical layer for very high-speed 802.11 networking."},
+{m:1,q:"What protocol does the 802.12 standard rely on, and what standards is it compatible with?",o:["The demand priority protocol; compatible with 802.3 and 802.5","The token ring protocol; compatible with 802.11 only","CSMA/CD; compatible with Bluetooth only","TCP/IP; compatible with all wireless standards"],e:"802.12 offers 100 Mbps Ethernet speed and lets 802.3/802.5 users upgrade directly."},
+{m:1,q:"What does the 802.15 standard define?",o:["Standards for a wireless personal area network (WPAN)","Standards for wide area cellular networks","Standards for satellite communication","Standards for fiber optic cabling"],e:"802.15 covers wireless connectivity specifications for fixed or portable devices at short range."},
+{m:1,q:"Which 802.15 sub-standard specifically covers Bluetooth?",o:["802.15.1","802.15.4","802.15.5","802.11i"],e:"802.15.1 (Bluetooth) works on the 2.4 GHz band for short-distance data exchange."},
+{m:1,q:"What specification does the 802.15.4 standard use, and what is its data rate?",o:["ZigBee, with a low data rate of 250 Kbps but increased battery life","Bluetooth, with a data rate of 1 Mbps","Wi-Fi HaLow, with a data rate of 54 Mbps","GSM, with a data rate of 11 Mbps"],e:"ZigBee transmits long-distance data through a mesh network at low complexity."},
+{m:1,q:"What topology does the 802.15.5 standard deploy?",o:["A full-mesh or half-mesh topology","A star topology only","A bus topology only","A ring topology only"],e:"802.15.5 includes network initialization, addressing, and unicasting on mesh topologies."},
+{m:1,q:"How is wireless encryption defined in the handout?",o:["A process of protecting a wireless network from attackers attempting to breach RF traffic","A method of boosting Wi-Fi signal range","A technique for pairing Bluetooth devices","A process for assigning IP addresses to wireless devices"],e:"Encryption protects sensitive information from being collected by attackers."},
+{m:1,q:"Why is WEP considered a weak encryption standard today?",o:["It is an outdated wireless security standard that can be easily cracked","It uses AES, which is now considered obsolete","It requires a centralized RADIUS server that is expensive to maintain","It cannot be used with the 802.11 standard at all"],e:"WEP is described as easily crackable and outdated."},
+{m:1,q:"What does EAP support?",o:["Multiple authentication methods such as token cards, Kerberos, and certificates","Only password-based authentication","Only biometric authentication","Only PIN-based authentication"],e:"The Extensible Authentication Protocol is flexible across several authentication methods."},
+{m:1,q:"What is LEAP?",o:["A proprietary version of EAP developed by Cisco","An open-source alternative to WPA3","A method for jamming wireless signals","A type of rogue access point"],e:"Lightweight EAP is Cisco's proprietary implementation of EAP."},
+{m:1,q:"Which components does WPA use for strong encryption and authentication?",o:["TKIP and Message Integrity Check (MIC), with a 48-bit IV and 32-bit CRC","AES and CCMP only","RADIUS and PEAP only","GCMP-256 and HMAC-SHA-384"],e:"WPA relies on TKIP-based encryption with a Message Integrity Check for security."},
+{m:1,q:"What is TKIP used for?",o:["A temporary security protocol used in WPA as a replacement for WEP","A permanent encryption standard used only in WPA3","A method for spoofing MAC addresses","A protocol for detecting rogue access points"],e:"TKIP uses a unicast encryption key that changes for every packet."},
+{m:1,q:"What upgrade does WPA2 bring over WPA?",o:["It uses AES and CCMP for wireless data encryption","It removes the need for any encryption key","It uses only a 32-bit CRC for security","It eliminates the need for a four-way handshake"],e:"WPA2 replaced TKIP-based encryption with the stronger AES/CCMP combination."},
+{m:1,q:"What does AES replace in WPA2?",o:["TKIP","WEP","EAP","RADIUS"],e:"AES is described as a symmetric-key encryption used in WPA2 as a replacement for TKIP."},
+{m:1,q:"What does CCMP provide in WPA2?",o:["Strong encryption and authentication","Centralized user directory services","A backup key in case AES fails","Compatibility with WEP-only devices"],e:"CCMP is the encryption protocol used alongside AES in WPA2."},
+{m:1,q:"What does WPA2 Enterprise integrate?",o:["EAP standards with WPA2 encryption","WEP with WPA3 encryption","Bluetooth pairing with Wi-Fi encryption","GSM authentication with Wi-Fi encryption"],e:"WPA2 Enterprise combines EAP-based authentication with WPA2's encryption."},
+{m:1,q:"What is RADIUS used for?",o:["Centralized authentication and authorization management","Encrypting Bluetooth traffic","Jamming rogue access points","Boosting Wi-Fi signal strength"],e:"RADIUS stands for Remote Authentication Dial-In User Service."},
+{m:1,q:"What does PEAP do?",o:["Encapsulates EAP within an encrypted and authenticated TLS tunnel","Replaces AES as the primary WPA2 cipher","Provides a physical layer for 60 GHz networks","Detects rogue access points automatically"],e:"PEAP adds a secure TLS tunnel around the EAP authentication process."},
+{m:1,q:"What makes WPA3 more secure than WPA2?",o:["It uses GCMP-256 for encryption and HMAC-SHA-384 for authentication","It removes the need for any authentication","It uses the same TKIP encryption as WPA","It only works with 2.4 GHz networks"],e:"WPA3 is the third-generation Wi-Fi security protocol with stronger cryptography."},
+{m:1,q:"How do Rogue AP Attacks give attackers access to a network?",o:["Unauthorized APs can allow anyone with an 802.11-equipped device to connect to a corporate network","They physically damage the router's antenna","They only work against Bluetooth devices","They require the victim to manually approve the connection"],e:"Rogue APs authenticate clients via SSIDs without proper authorization checks."},
+{m:1,q:"Which of these can cause Client Mis-Association?",o:["Misconfigured clients, insufficient Wi-Fi coverage, or attractive SSIDs","Only a completely powered-off AP","Only an expired SSL certificate","Only a change in the organization's logo"],e:"Mis-association can happen with or without the knowledge of the client or rogue AP."},
+{m:1,q:"How can a Misconfigured AP Attack occur?",o:["A client may unintentionally change an AP's security settings, exposing a well-secured network","An attacker physically destroys the AP","The AP automatically resets its settings every day","The manufacturer ships the AP with attacks pre-installed"],e:"Unintentional changes to security settings can create exploitable misconfigurations."},
+{m:1,q:"What is malicious association, one of the two forms of Unauthorized Association?",o:["An attacker uses soft APs to infect a victim's machine and gain unauthorized network access","An attacker connects to a neighboring organization's network by accident","An attacker floods a network with jamming signals","An attacker cracks a WEP key using Aircrack-ng"],e:"Malicious association can lead to stolen passwords, wired network attacks, or planted Trojans."},
+{m:1,q:"What is accidental association, the other form of Unauthorized Association?",o:["Connecting to a neighboring organization's overlapping AP without the victim's knowledge","Deliberately connecting to a known malicious AP","Using a soft AP to infect a victim's device","Spoofing the MAC address of a legitimate AP"],e:"This happens without malicious intent, simply due to overlapping network coverage."},
+{m:1,q:"What makes Ad-Hoc Connection Attacks possible?",o:["Wi-Fi clients can communicate directly without an AP relaying packets","All ad-hoc networks require a certified AP to operate","Ad-hoc networks always use WPA3 by default","Ad-hoc connections cannot be compromised by attackers"],e:"An attacker can connect to and compromise clients operating in ad-hoc mode."},
+{m:1,q:"How does a Honeypot AP Attack work?",o:["A rogue AP uses the same SSID as a target network with high-power antennas to lure clients","It disables all nearby wireless networks","It only targets Bluetooth-enabled devices","It requires physical access to the victim's router"],e:"Clients that connect to the honeypot AP risk exposing identity, username, and password."},
+{m:1,q:"How does AP MAC Spoofing give an attacker network access?",o:["A rogue AP is programmed to advertise the same MAC and SSID as a legitimate AP","The attacker changes their own device's IP address","The attacker jams all wireless signals in the area","The attacker exploits a buffer overflow in the AP's firmware"],e:"Clients connect based on beacon information, which can be spoofed by an attacker."},
+{m:1,q:"What does the Key Reinstallation Attack (KRACK) exploit?",o:["Flaws in the implementation of the four-way handshake process in WPA2","A weakness in Bluetooth pairing modes","A vulnerability in DNS resolution","A flaw in SSID broadcasting"],e:"The four-way handshake normally generates a fresh encryption key for network traffic."},
+{m:1,q:"What is the result of a Jamming Signal Attack?",o:["A denial of service (DoS) to authorized users as legitimate traffic is obstructed","Permanent theft of encryption keys","Automatic disabling of all APs in range","Immediate exposure of user passwords"],e:"Overwhelming malicious traffic causes devices to hold transmissions until the signal subsides."},
+{m:1,q:"What is the Aircrack-ng Suite generally used for?",o:["Detecting, sniffing, and cracking WEP/WPA/WPA2 keys on 802.11 wireless networks","Encrypting Bluetooth traffic","Managing enterprise RADIUS servers","Designing wireless network topology diagrams"],e:"It runs under both Linux and Windows as an analysis toolkit."},
+{m:1,q:"What is Aircrack-ng itself known as within the suite?",o:["The de facto WEP and WPA/WPA2 PSK cracking tool","A tool for capturing raw 802.11 frames only","A tool exclusively for Bluetooth attacks","A firewall configuration utility"],e:"It's the core cracking tool the whole suite is named after."},
+{m:1,q:"What does Airodump-ng do?",o:["Captures packets of raw 802.11 frames and collects WEP IVs","Switches a wireless card from managed to monitor mode","Creates a virtual tunnel interface for encrypted traffic","Removes WEP cloaking from a pcap file"],e:"Airodump-ng is used for packet capture, not mode switching or tunneling."},
+{m:1,q:"What does Airmon-ng do?",o:["Switches a wireless interface between managed mode and monitor mode","Captures the WPA/WPA2 handshake","Stores ESSID and password lists","Allows multiple programs to share a Wi-Fi card"],e:"Mode switching is necessary before other Aircrack-ng tools can capture raw traffic."},
+{m:1,q:"What can Airbase-ng do?",o:["Capture the WPA/WPA2 handshake and act as an ad-hoc AP","Decrypt WEP/WPA/WPA2 traffic","Recover WEP keys from Windows XP utilities","Generate a client-AP relationship graph"],e:"Airbase-ng can impersonate an AP while capturing handshakes."},
+{m:1,q:"What is Aireplay-ng used for?",o:["Traffic generation, fake authentication, packet replay, and ARP request injection","Creating client-AP relationship graphs","Decrypting captured WEP/WPA2 traffic","Storing password lists for cracking"],e:"Aireplay-ng actively manipulates wireless traffic to aid cracking efforts."},
+{m:1,q:"What does Airdecap-ng do?",o:["Decrypts WEP/WPA/WPA2 traffic and strips wireless headers from Wi-Fi packets","Encrypts traffic for secure transmission","Jams nearby wireless signals","Detects rogue access points"],e:"Airdecap-ng processes already-captured encrypted traffic."},
+{m:1,q:"What is Packetforge-ng used for?",o:["Creating encrypted packets that can subsequently be used for injection","Capturing raw 802.11 frames","Switching interfaces to monitor mode","Analyzing Wi-Fi coverage and interference"],e:"Forged packets support further injection-based attacks."},
+{m:1,q:"What does WZCook recover, and from where?",o:["WEP keys, from the Wireless Zero Configuration utility of Windows XP","WPA3 keys, from modern Windows systems","Bluetooth PINs, from Android devices","RADIUS credentials, from enterprise servers"],e:"WZCook specifically targets a legacy Windows XP wireless utility."},
+{m:1,q:"What is Wesside-ng designed to do quickly?",o:["Obtain a WEP key in minutes using various techniques","Set up a WPA3-Enterprise network","Detect honeypot APs instantly","Encrypt Bluetooth pairing requests"],e:"It's built specifically for fast WEP key recovery."},
+{m:1,q:"What does AirMagnet WiFi Analyzer PRO provide?",o:["Real-time, accurate Wi-Fi analysis for auditing and troubleshooting 802.11 networks","A cracking tool for WPA2 PSKs","A jamming device for spectrum attacks","A Bluetooth pairing utility"],e:"Attackers can also use it to gather details like coverage, performance, and security issues."},
+{m:1,q:"Which is a recommended best practice for wireless Configuration?",o:["Change the default SSID after WLAN configuration","Leave all router ports open for convenience","Broadcast the SSID as loudly as possible","Use the company name as the network passphrase"],e:"Changing the default SSID reduces the chance of easy identification by attackers."},
+{m:1,q:"Which is a recommended best practice for wireless Configuration involving device identity?",o:["Enable MAC address filtering on APs or routers","Disable all filtering to allow maximum compatibility","Share the router's admin password publicly","Allow remote administration by default"],e:"MAC address filtering restricts which devices may connect."},
+{m:1,q:"What is SSID cloaking used for, per the Best Practices for SSID Settings?",o:["Keeping certain default wireless messages from broadcasting the SSID to everyone","Encrypting the SSID so devices can never connect","Changing the SSID automatically every hour","Disabling all wireless connections"],e:"Cloaking limits visibility of the network name to reduce attack surface."},
+{m:1,q:"What should be avoided when creating a wireless passphrase, per the SSID Settings best practices?",o:["Using the SSID, company name, or an easy-to-guess string","Using a mix of numbers, letters, and symbols","Making the passphrase longer than eight characters","Changing the passphrase periodically"],e:"Easily guessable passphrases undermine wireless security."},
+{m:1,q:"What additional encryption technique is recommended under SSID Settings best practices?",o:["Implementing IPSec over wireless","Disabling all encryption for speed","Using only WEP for legacy compatibility","Broadcasting the SSID at maximum power"],e:"IPSec adds another layer of protection on top of standard wireless encryption."},
+{m:1,q:"Which authentication practice is recommended over WPA or WEP?",o:["WPA2-Enterprise with 802.1x authentication","WPA2-Personal with a shared passphrase only","WEP with a long passphrase","No authentication, relying on SSID cloaking alone"],e:"Enterprise-grade 802.1x authentication is stronger than personal WPA/WEP setups."},
+{m:1,q:"What does enabling server verification via 802.1X authentication help prevent?",o:["MITM attacks","Jamming attacks","Bluetooth pairing attacks","SSID cloaking failures"],e:"Verifying the server on the client side blocks man-in-the-middle attempts."},
+{m:1,q:"What additional authentication layer is recommended as added defense?",o:["Two-factor authentication","A second SSID broadcast","A longer Wi-Fi range","A public guest network"],e:"Two-factor authentication adds a layer of defense beyond a password alone."},
+{m:1,q:"What can organizations deploy to prevent wireless attacks proactively?",o:["Rogue-AP detection or wireless intrusion prevention/detection systems","A second unencrypted guest network","Public SSID broadcasting","Unlimited login attempts on the router"],e:"These systems actively detect and can block wireless attack attempts."},
+{m:1,q:"What happens to a Bluetooth device in Discoverable mode?",o:["It is visible to other Bluetooth-enabled devices attempting to connect","It rejects all incoming pairing requests","It becomes invisible to all devices, even previously paired ones","It automatically pairs with any nearby device"],e:"Discoverable mode is necessary mainly for first-time connections."},
+{m:1,q:"What characterizes the Limited discoverable mode?",o:["Devices are discoverable only for a limited period, event, or temporary condition","Devices remain discoverable permanently","Devices cannot be set to this mode at all","Devices reject all pairing requests automatically"],e:"There's no direct HCI command for this mode; it must be set indirectly."},
+{m:1,q:"What remains true of a Bluetooth device in Non-discoverable mode?",o:["It stays visible to devices that were previously paired with it or know its MAC address","It becomes completely invisible to every device, even previously paired ones","It automatically switches to pairable mode after a timeout","It cannot be used for any Bluetooth communication"],e:"Non-discoverable only hides the device from new search processes."},
+{m:1,q:"What does Non-pairable mode do?",o:["Rejects pairing requests sent by any device","Automatically accepts all pairing requests","Makes the device invisible to search but still pairable","Disables Bluetooth entirely"],e:"This is the opposite of pairable mode."},
+{m:1,q:"What does Pairable mode allow?",o:["The device can accept pairing requests and establish a connection","The device rejects every connection attempt","The device becomes invisible during searches","The device only connects to previously known MAC addresses"],e:"In pairable mode, a device is ready to accept new pairing requests."},
+{m:1,q:"How is Bluetooth Hacking generally described?",o:["Exploiting Bluetooth stack implementation vulnerabilities to compromise data in Bluetooth-enabled devices and networks","Physically damaging a Bluetooth chip","Jamming all Bluetooth signals in an area","Replacing a Bluetooth device's firmware with a new OS"],e:"Attacks often occur through the ad-hoc networks called piconets."},
+{m:1,q:"What does a Bluesmacking attack cause?",o:["A buffer overflow from an oversized ping packet, similar to an ICMP ping-of-death attack","A permanent loss of Bluetooth pairing history","Unauthorized access to a device's phonebook","The theft of encryption keys during pairing"],e:"Bluesmacking is a Bluetooth analog to the classic ping-of-death attack."},
+{m:1,q:"Does Bluejacking cause direct damage to the receiving device?",o:["No, it is mainly irritating and disruptive rather than damaging","Yes, it always corrupts the device's operating system","Yes, it always steals the device's contact list","No, but it permanently disables Bluetooth on the device"],e:"Bluejacking sends unsolicited messages using a user-defined connection name, similar to spam."},
+{m:1,q:"What vulnerability does Bluesnarfing exploit to access sensitive data?",o:["A vulnerability in the Object Exchange (OBEX) protocol","A vulnerability in the WPA2 four-way handshake","A vulnerability in the SSID broadcast mechanism","A vulnerability in RADIUS server authentication"],e:"Attackers perform a GET operation for known file names, such as a device's phonebook."},
+{m:1,q:"What is BlueSniff used for?",o:["A proof-of-concept Bluetooth wardriving utility for finding hidden and discoverable devices","A tool for cracking WPA2 passphrases","A tool for jamming cellular signals","A firmware replacement tool for iOS devices"],e:"BlueSniff operates on Linux and searches for nearby Bluetooth devices."},
+{m:1,q:"What can an attacker do in a Bluebugging attack?",o:["Gain remote access to a device without the victim's awareness and intercept calls or messages","Only send annoying advertisement messages","Only determine a device's make and model","Only jam Bluetooth signals in the area"],e:"Bluebugging is a more invasive attack than simple Bluejacking."},
+{m:1,q:"What is the goal of BluePrinting?",o:["Determining the make and model of a target Bluetooth-enabled device","Encrypting a device's Bluetooth traffic","Jamming a target device's Bluetooth signal","Bypassing a device's passcode lock"],e:"This footprinting technique helps attackers find exploitable vulnerabilities based on device model."},
+{m:1,q:"Which devices does Btlejacking specifically target?",o:["Bluetooth low energy (BLE) devices","Classic Bluetooth devices only","Wi-Fi-only devices","Cellular baseband processors only"],e:"Btlejacking can sniff, jam, and take control of data transmission between BLE devices via MITM."},
+{m:1,q:"What does a KNOB attack exploit?",o:["A vulnerability in the Bluetooth wireless standard's encryption key negotiation","A vulnerability in WPA3's GCMP-256 encryption","A vulnerability in the SSID cloaking mechanism","A vulnerability in RADIUS authentication"],e:"KNOB stands for Key Negotiation of Bluetooth and enables an untraceable MITM attack."},
+{m:1,q:"What kind of attack is MAC spoofing in the Bluetooth context?",o:["A passive attack that spoofs a target device's MAC address to intercept or manipulate data","An active attack that floods a device with ping packets","A social engineering attack via SMS","A physical attack requiring direct device access"],e:"It's described specifically as passive in nature."},
+{m:1,q:"What happens during a Bluetooth Man-in-the-Middle/impersonation attack?",o:["Devices intended to pair with each other unknowingly pair with the attacker's device instead","The attacker physically swaps out the victim's device","The attacker only listens without altering any data","The attacker disables Bluetooth on both devices permanently"],e:"This lets the attacker intercept and manipulate data transmitted in the piconet."},
+{m:1,q:"What does Cisco Adaptive Wireless IPS offer, integrated with the Cisco Unified Wireless Network?",o:["Advanced network security for monitoring and detecting wireless anomalies without needing an overlay solution","A method for jamming rogue access points","A Bluetooth-only security suite","A physical lock for wireless routers"],e:"It delivers integrated visibility and control across the network."},
+{m:1,q:"What does RFProtect provide, and for which vendor's network?",o:["Aruba Networks' built-in Wireless Intrusion Prevention System (WIPS)","Cisco's cloud-based firewall service","Netgear's built-in parental control system","A generic open-source WIPS for any vendor"],e:"RFProtect protects against rogue APs, MITM attacks, and unauthorized Wi-Fi devices."},
+{m:1,q:"What does WatchGuard WIPS provide?",o:["Continuous monitoring, rogue AP detection, and automated wireless threat mitigation","A Bluetooth pairing management console","A Wi-Fi speed test utility","A guest network captive portal"],e:"It's described as a wireless intrusion prevention solution."},
+{m:1,q:"What is AirMagnet Planner used for?",o:["Designing optimal wireless coverage and planning AP placement before deployment","Cracking WPA2 passphrases in real time","Jamming a competitor's wireless signal","Managing RADIUS authentication servers"],e:"It helps network engineers predict signal strength ahead of deployment."},
+{m:1,q:"What does Extreme AirDefense offer at an enterprise level?",o:["Centralized detection, alerting, and response to wireless threats","A consumer-grade home Wi-Fi extender","A Bluetooth device pairing manager","A single-user VPN client"],e:"It's described as an enterprise-grade WIPS and wireless monitoring platform."},
+
+/* ---------- MODULE 2: MOBILE ATTACKS ---------- */
+{m:2,q:"Why have mobile devices become a prime target for attackers?",o:["The extensive usage and implementation of bring your own device (BYOD) policies in organizations","Mobile devices cannot run any security software","Mobile networks are always unencrypted by default","Mobile devices are immune to malware, so attackers use them as launch points"],e:"BYOD adoption widens the attack surface organizations must defend."},
+{m:2,q:"Which layers can a mobile attack involve, according to the Anatomy of a Mobile Attack?",o:["The device, the network layer, the data center, or a combination of them","Only the device's physical hardware","Only the mobile carrier's billing system","Only the app store review process"],e:"Attacks can target any of these layers individually or together."},
+{m:2,q:"Why are mobile users more likely to fall for Phishing attacks than desktop users?",o:["Devices are small, showing only short URLs, limited warnings, and scaled-down lock icons","Mobile browsers cannot display any security indicators at all","Mobile devices have no way to visit fake websites","Phishing only targets desktop email clients"],e:"Limited screen real estate hides cues that would otherwise warn desktop users."},
+{m:2,q:"What does a Framing attack involve?",o:["A malicious web page embedded into another page using HTML iFrame elements, combined with clickjacking","Physically framing a device to hide a hidden camera","Sending fraudulent SMS messages with malicious links","Injecting SQL commands into a mobile app's database"],e:"iFrame functionality is exploited to steal users' sensitive information."},
+{m:2,q:"What is Clickjacking also known as?",o:["A user interface redress attack","A SIM-swapping attack","A baseband processor attack","A brute-force attack"],e:"It tricks users into clicking something different from what they think they're clicking."},
+{m:2,q:"How does a Man-in-the-Mobile attack bypass OTP-based verification?",o:["Malicious code on the device intercepts OTPs sent via SMS or voice call and relays them to the attacker","It disables the victim's mobile network entirely","It physically clones the victim's SIM card","It requires the attacker to have prior access to the victim's email"],e:"The implanted malware defeats password verification systems relying on OTPs."},
+{m:2,q:"What happens during a Buffer Overflow?",o:["A program writing data to a buffer exceeds the intended limit and overwrites adjacent memory","A device runs out of battery mid-transaction","A user exceeds their data plan limit","An app requests more permissions than needed"],e:"This can cause memory access errors, incorrect results, and device crashes."},
+{m:2,q:"What do attackers try to exploit through Data Caching attacks?",o:["Sensitive information stored in data caches meant to speed up app interactions","The device's camera hardware","The mobile carrier's cell towers","The user's biometric sensors directly"],e:"Caches preserve scarce resources but can also store exploitable sensitive data."},
+{m:2,q:"What do Baseband Attacks target?",o:["Vulnerabilities in a phone's GSM/3GPP baseband processor","Vulnerabilities in a device's touchscreen driver","Vulnerabilities in a device's camera app","Vulnerabilities in a device's battery management system"],e:"The baseband processor sends and receives radio signals to cell towers."},
+{m:2,q:"What is SMiShing?",o:["A phishing fraud using SMS text messages with deceptive links or phone numbers","A method for jailbreaking an iOS device via SMS","A technique for cracking Wi-Fi passwords via text","A type of buffer overflow triggered by long text messages"],e:"The victim is tricked into clicking a link or calling a number that reveals personal information."},
+{m:2,q:"Why is weak database security in mobile apps a risk under Sensitive Data Storage?",o:["It makes apps targets for attackers seeking to hack and steal stored user information","It only affects apps that use cloud storage","It has no effect unless the device is jailbroken","It only matters for apps used by enterprise employees"],e:"Weak security in an app's database architecture directly exposes sensitive data."},
+{m:2,q:"What attack becomes possible when an app has No Encryption or Weak Encryption?",o:["Session hijacking","Bluejacking","SMiShing","Baseband exploitation"],e:"Unencrypted or weakly encrypted transmitted data is susceptible to session hijacking."},
+{m:2,q:"What can Improper SSL Validation allow attackers to do?",o:["Circumvent the data security intended by an app's SSL validation process","Physically access the victim's device","Clone the victim's SIM card remotely","Disable the victim's mobile data plan"],e:"Security loopholes in SSL validation create an exploitable gap."},
+{m:2,q:"What does a Configuration Manipulation attack exploit?",o:["External configuration files and libraries used by an app","The app's icon design","The app's marketing description in the store","The device's screen resolution settings"],e:"This can include unauthorized access to admin interfaces or retrieval of clear-text config data."},
+{m:2,q:"What does Dynamic Runtime Injection allow an attacker to do?",o:["Manipulate an app's runtime to bypass security locks and access privileged parts of the app","Change the app's icon on the home screen","Send unsolicited Bluetooth messages","Reset the app's password remotely"],e:"Attackers can even steal data stored in memory this way."},
+{m:2,q:"What risk do Unintended Permissions create?",o:["Misconfigured apps can open doors to attackers by granting more access than intended","They automatically encrypt all user data","They prevent the app from ever being updated","They disable the app's network access entirely"],e:"This happens due to app misconfiguration rather than deliberate design."},
+{m:2,q:"What do Escalated Privileges attacks take advantage of?",o:["Design flaws, programming errors, bugs, or configuration oversights","Only user-chosen weak passcodes","Only outdated mobile carrier billing systems","Only physical theft of a device"],e:"These flaws let attackers reach resources normally protected from the app or user."},
+{m:2,q:"Why is No Passcode or a Weak Passcode a system-level risk?",o:["An attacker can easily guess or crack it to compromise data stored on the device","It only affects apps, not the operating system","It has no effect if the device uses Wi-Fi encryption","It is only a risk for enterprise-managed devices"],e:"A weak PIN, passcode, or pattern lock is an easy entry point."},
+{m:2,q:"What does iOS Jailbreaking provide, and what risk does it introduce?",o:["Root access to the OS with removed sandbox restrictions, introducing security and malware risks","Faster charging speeds with no added risk","A guaranteed performance boost with no downsides","Free access to paid apps with no security impact"],e:"Jailbreaking removes Apple's built-in security mechanisms."},
+{m:2,q:"What is Android Rooting, and what can it expose?",o:["Privileged root access within Android's subsystem, which can expose sensitive stored data","A method for updating Android without Google's approval, with no security impact","A way to increase Android's battery life only","A method for backing up data automatically"],e:"Rooting is Android's equivalent of jailbreaking, with similar data exposure risk."},
+{m:2,q:"How can an attacker exploit OS Data Caching?",o:["By rebooting the victim's device with a malicious OS and extracting data from dumped memory","By sending a phishing SMS to the victim","By cracking the device's Wi-Fi password","By physically damaging the device's screen"],e:"The OS cache temporarily stores data on the hard disk, which can be dumped."},
+{m:2,q:"What vulnerability lets attackers expose iOS Keychain data?",o:["Known vulnerabilities in the cryptographic algorithms iOS uses to store passwords and data","A vulnerability in the app store review process","A vulnerability in the device's camera firmware","A vulnerability in the SIM card's encryption"],e:"Exploiting these lets attackers decrypt passwords, encryption keys, and other private data."},
+{m:2,q:"What risk does Carrier-loaded Software introduce?",o:["Pre-installed software may contain vulnerabilities attackers can exploit to steal or modify data","It always improves device security by default","It cannot be removed or exploited under any circumstances","It only affects devices without cellular service"],e:"This includes risks like eavesdropping on calls."},
+{m:2,q:"What does User-initiated Code rely on to succeed?",o:["Tricking the victim into installing malicious apps or clicking malicious links","Exploiting the mobile carrier's billing system directly","A flaw in the device's hardware encryption chip","A vulnerability in the SIM card itself"],e:"This social-engineering-style attack depends on victim action."},
+{m:2,q:"Why can attackers intercept data even when apps use Wi-Fi encryption?",o:["Attacks against SSL/TLS algorithms can still expose sensitive information despite their protections","Wi-Fi encryption is never actually applied by mobile apps","SSL/TLS provides no protection whatsoever","Mobile devices cannot use SSL/TLS at all"],e:"Weak or attacked SSL/TLS implementations remain a network-layer risk."},
+{m:2,q:"How do Rogue Access Points give attackers network access?",o:["Attackers physically install an illicit AP that hijacks legitimate users' connections","They exploit a flaw in the mobile OS's kernel","They require no physical proximity to the target network","They only work against Bluetooth-enabled devices"],e:"This lets attackers access an otherwise protected network."},
+{m:2,q:"What tools are named as examples of Packet Sniffing tools?",o:["Wireshark and Capsa Network Analyzer","Aircrack-ng and Airodump-ng","Malwarebytes and Lookout","Nessus and Metasploit"],e:"These tools capture and analyze data packets, often revealing cleartext credentials."},
+{m:2,q:"What can an attacker do during a network Man-in-the-Middle (MITM) attack?",o:["Eavesdrop on, intrude into, and read or modify data in an intercepted connection","Only observe traffic without altering it","Only attack Bluetooth connections, not Wi-Fi","Only target encrypted traffic, never plaintext"],e:"MITM attackers can insert fraudulent data into the intercepted communication."},
+{m:2,q:"What does Session Hijacking allow an attacker to do?",o:["Use stolen valid session IDs to gain unauthorized access to user and network information","Physically take control of the victim's device","Disable the victim's mobile carrier service","Clone the victim's SIM card remotely"],e:"Stolen session IDs let the attacker impersonate an authenticated session."},
+{m:2,q:"What is the effect of DNS Poisoning?",o:["Website users are directed to another website of the attacker's choice via substituted false IP addresses","The victim's device loses all network connectivity","The victim's SIM card is disabled remotely","The victim's device is physically damaged"],e:"Attackers exploit network DNS servers to substitute false IP addresses."},
+{m:2,q:"How does an SSLStrip attack work?",o:["It invisibly downgrades an HTTPS connection to unencrypted HTTP, relying on users not noticing","It upgrades HTTP connections to HTTPS without the user's consent","It physically strips encryption chips from a device","It only works against Bluetooth pairing, not web traffic"],e:"This downgrade is difficult for users to detect in mobile browsers."},
+{m:2,q:"What is the purpose of Fake SSL Certificates in a MITM attack?",o:["To intercept traffic on a supposedly secure HTTPS connection by issuing a fraudulent certificate","To permanently disable HTTPS on the victim's browser","To speed up encrypted connections","To automatically renew a website's real SSL certificate"],e:"The fake certificate tricks the browser into treating an insecure connection as secure."},
+{m:2,q:"What are the two primary points of entry into a data center, according to the handout?",o:["A web server and a database","A firewall and a router","A mobile app and its app store listing","A SIM card and a baseband processor"],e:"Data Center/Cloud attacks generally target one of these two entry points."},
+{m:2,q:"What do Platform Vulnerabilities attacks exploit on a web server?",o:["Vulnerabilities in the OS, server software, or application modules running on the server","Vulnerabilities in the victim's mobile hardware only","Vulnerabilities in the victim's SIM card only","Vulnerabilities in the victim's Bluetooth stack only"],e:"Attackers may monitor communication between a mobile device and the web server to expose flaws."},
+{m:2,q:"What can Server Misconfiguration allow?",o:["Unauthorized access to resources on the server","Automatic encryption of all server data","Immunity from all future attacks","Faster server response times only"],e:"Misconfigured servers open doors that a properly configured server would close."},
+{m:2,q:"What does a Cross-site Scripting (XSS) attack inject into legitimate websites?",o:["Malicious client-side code such as JavaScript, VBScript, ActiveX, HTML, or Flash","Malicious server-side database queries only","Malicious hardware firmware updates","Malicious SIM card commands"],e:"XSS exploits vulnerabilities in dynamically generated web pages."},
+{m:2,q:"What does a Cross-Site Request Forgery (CSRF) attack trick a browser into doing?",o:["Sending unauthorized requests to a trusted site using an authenticated user's session","Downloading malware directly to the device's storage","Disabling the device's firewall permanently","Revealing the user's SIM card PIN"],e:"This compromises session integrity without the user's knowledge."},
+{m:2,q:"What can Weak Input Validation lead to?",o:["XSS, buffer overflow, injection attacks, and system malfunction","Improved server performance","Automatic patching of security flaws","Stronger encryption of user data"],e:"Attackers forge communications or bypass logic to exploit missing validation checks."},
+{m:2,q:"Why are systems that allow unlimited login attempts highly vulnerable to Brute-Force Attacks?",o:["Attackers can use trial-and-error to guess valid input fields like passwords without restriction","Unlimited attempts always trigger an automatic lockout","Brute-force attacks require physical access regardless of attempt limits","Attackers cannot automate unlimited attempts at all"],e:"A lack of attempt limits removes a key defense against guessing attacks."},
+{m:2,q:"Which of these is mentioned as another example of a web-server-based attack, alongside XSS and CSRF?",o:["Hypervisor attacks","Bluesnarfing","SMiShing","Bluejacking"],e:"The handout also mentions cross-origin resource sharing exploits, side-channel attacks, hypervisor attacks, and VPN-targeted exploits."},
+{m:2,q:"What does a SQL Injection attack achieve?",o:["Using non-validated input to inject SQL commands executed by the backend database","Encrypting the entire database automatically","Physically damaging database servers","Disabling the database's network connection"],e:"This can grant unauthorized access or retrieve information directly from the database."},
+{m:2,q:"What does database Privilege Escalation allow an attacker to do?",o:["Gain high-level database access to steal sensitive data","Automatically back up the database","Encrypt database records for safekeeping","Disable the database administrator's account permanently"],e:"Escalated access lets attackers reach data beyond their normal permissions."},
+{m:2,q:"What is the goal of a Data Dumping attack on a database?",o:["Forcing the database to dump data, revealing sensitive records","Encrypting all database records","Deleting all database records permanently","Backing up the database to an external server"],e:"Data dumping exposes records the attacker shouldn't normally see."},
+{m:2,q:"What can OS Command Execution attacks against a database achieve?",o:["Injecting OS-level commands into database queries, potentially gaining root-level access to the host system","Only reading database table names","Only changing a database's display formatting","Only slowing down query response times"],e:"This is a particularly severe outcome of a database-layer attack."},
+{m:2,q:"Which category in the Mobile Attack Vectors table includes Virus and rootkit as an example?",o:["Malware","Data Exfiltration","Data Tampering","Data Loss"],e:"Virus and rootkit, along with application and OS modification, fall under Malware."},
+{m:2,q:"Which category in the Mobile Attack Vectors table includes print screen and screen scraping as an example?",o:["Data Exfiltration","Malware","Data Tampering","Data Loss"],e:"Along with data streams/email extraction and copying to a USB key, this falls under Data Exfiltration."},
+{m:2,q:"Which category in the Mobile Attack Vectors table includes a jailbroken device as an example?",o:["Data Tampering","Malware","Data Exfiltration","Data Loss"],e:"Jailbroken devices, modification by another app, and undetected tamper attempts fall under Data Tampering."},
+{m:2,q:"Which category in the Mobile Attack Vectors table includes loss of device as an example?",o:["Data Loss","Malware","Data Exfiltration","Data Tampering"],e:"Application vulnerabilities and unapproved physical access also fall under Data Loss."},
+{m:2,q:"Which of these is NOT listed among the Mobile Platform Vulnerabilities and Risks?",o:["Weak Password Recovery","Excessive Permissions","Jailbreaking and Rooting","Privacy Issues (Geolocation)"],e:"The listed risks include Excessive Permissions, Jailbreaking and Rooting, and Privacy Issues, among others — not Weak Password Recovery specifically."},
+{m:2,q:"What does the OWASP M1 risk, Improper Platform Usage, cover?",o:["Misuse of a platform feature or failure to use platform security controls, such as Touch ID or Keychain","Only vulnerabilities in third-party ad libraries","Only issues with app store review policies","Only vulnerabilities in cellular baseband processors"],e:"This includes misuse of Android intents and platform permissions as well."},
+{m:2,q:"What causes Insecure Data Storage (M2) according to OWASP?",o:["Assuming users and malware will never access the device's file system or data stores","Using too much encryption on stored data","Storing data exclusively in cloud servers","Updating apps too frequently"],e:"Jailbreaking or rooting can bypass the encryption protections this assumption relies on."},
+{m:2,q:"What does M3, Insecure Communication, cover?",o:["Poor handshaking, incorrect SSL versions, and cleartext communication of sensitive assets","Only issues with Bluetooth pairing","Only issues with SMS message length limits","Only issues with app icon design"],e:"A poor SSL setup can also facilitate phishing and MITM attacks."},
+{m:2,q:"What does M4, Insecure Authentication, capture?",o:["Failing to identify or maintain a user's identity, or weaknesses in session management","Only weak encryption algorithms","Only issues with app permissions","Only issues with app store submission"],e:"This is about the process of confirming and maintaining who the user is."},
+{m:2,q:"How does M5, Insufficient Cryptography, differ from having no cryptography at all?",o:["Cryptography is attempted but performed incorrectly, due to weak algorithms or flawed implementation","No cryptography is ever applied to the data at all","It only applies to hardware-level encryption chips","It only applies to communications, never to storage"],e:"An adversary must convert the encrypted data back to its original form to exploit this weakness."},
+{m:2,q:"How does M6, Insecure Authorization, differ from an authentication failure?",o:["It covers failures in authorization decisions, such as forced browsing, distinct from confirming who the user is","It is identical to an authentication failure in every case","It only applies to server-side code, never client-side","It only applies when a user has no account at all"],e:"Granting anonymous access where authenticated access is required is actually an authentication failure, not an authorization one."},
+{m:2,q:"What does M7, Client Code Quality, cover?",o:["Code-level implementation problems in the mobile client, such as buffer overflows and format string vulnerabilities","Server-side coding mistakes exclusively","Issues with a device's physical keyboard","Issues with app store pricing models"],e:"This category is sometimes called Security Decisions via Untrusted Inputs."},
+{m:2,q:"What does M8, Code Tampering, include?",o:["Binary patching, local resource modification, method hooking, and dynamic memory modification","Only changes made through official app updates","Only changes to a device's wallpaper","Only changes to a user's saved passwords"],e:"Once delivered to a device, an app's code and resources are directly modifiable by an attacker."},
+{m:2,q:"What is the goal of M9, Reverse Engineering?",o:["Analyzing the final core binary to determine source code, libraries, algorithms, and other assets","Rewriting an app's user interface for a different platform","Improving an app's battery efficiency","Testing an app's compatibility with new OS versions"],e:"Tools like IDA Pro, Hopper, and otool assist attackers in this analysis."},
+{m:2,q:"What does M10, Extraneous Functionality, refer to?",o:["Hidden backdoor functionality or internal development controls not meant for production release","Extra features that improve the app's performance","Extra permissions requested during installation only","Extra storage space used by cached data"],e:"An example given is a developer accidentally leaving a password as a comment in a hybrid app."},
+{m:2,q:"Which general mobile security guideline addresses simultaneous network connections?",o:["Never connect two separate networks, such as Wi-Fi and Bluetooth, simultaneously","Always keep both Wi-Fi and Bluetooth on for convenience","Only use Bluetooth when Wi-Fi is unavailable","Connect to any open Wi-Fi network when traveling"],e:"Simultaneous connections widen the potential attack surface."},
+{m:2,q:"What is recommended regarding app installation sources?",o:["Install applications only from trusted application stores","Install any app that requests minimal permissions","Install apps directly from developer websites for the latest version","Avoid checking app permissions before installing"],e:"Trusted app stores reduce the risk of installing malicious apps."},
+{m:2,q:"What should be done with a mobile device's data before disposing of it?",o:["Securely wipe or delete the data","Simply delete visible files and folders","Leave the data intact for the next owner","Reset only the device's wallpaper and settings"],e:"A simple file deletion may leave recoverable data behind; secure wiping addresses this."},
+{m:2,q:"What passcode-related guideline helps prevent brute-force guessing on a device?",o:["Configure a strong passcode with the maximum possible length","Use a four-digit passcode for convenience","Disable passcodes to speed up device access","Share the passcode with trusted contacts"],e:"A longer, stronger passcode is harder to guess or crack."},
+{m:2,q:"What does enabling the lockout/wipe feature accomplish?",o:["It protects the device after a certain number of failed passcode attempts","It automatically backs up the device daily","It disables the camera after failed logins","It notifies the mobile carrier of suspicious activity"],e:"This is one of the passcode-related guidelines listed for mobile security."},
+{m:2,q:"What guideline helps specifically thwart passcode guessing attempts?",o:["Setting erase data to ON after repeated failed attempts","Using the same passcode across multiple devices","Disabling the lock screen entirely","Allowing unlimited passcode attempts"],e:"Erasing data after repeated failures removes the incentive and opportunity for brute-forcing."},
+{m:2,q:"Why should OS and apps be updated regularly?",o:["To keep them secure by applying software updates and performing regular maintenance","Updates are optional and rarely improve security","Updates only add new features, never security fixes","Updating voids the device's warranty"],e:"Regular updates close known security gaps."},
+{m:2,q:"What does Enable Remote Management typically involve in an enterprise environment?",o:["Using MDM software to secure, monitor, manage, and support deployed mobile devices","Allowing employees to manage their own devices without oversight","Disabling all remote access to company devices","Removing all mobile devices from the corporate network"],e:"MDM (Mobile Device Management) centralizes control over an organization's mobile fleet."},
+{m:2,q:"How can organizations help prevent Rooting or Jailbreaking on managed devices?",o:["Ensure MDM solutions prevent or detect rooting/jailbreaking and include this in the security policy","Allow rooting on any device that requests it","Disable MDM software entirely to save resources","Only prevent rooting on Android, not iOS"],e:"This should be an explicit clause in a mobile security policy."},
+{m:2,q:"What can Remote Wipe Services like Find My Device or Find My iPhone do if a device is lost or stolen?",o:["Help locate the device and allow data to be wiped remotely","Automatically clone the device's data to a new phone","Permanently disable the mobile carrier's network","Restore the device to factory settings without wiping data"],e:"Reporting a lost device to IT also lets them disable certificates and access methods."},
+{m:2,q:"What does the Encrypt Storage guideline recommend?",o:["Configuring hardware encryption for the device and encrypting backups","Disabling encryption to improve device speed","Encrypting only email attachments","Encrypting data only when traveling internationally"],e:"This protects data at rest on the device itself."},
+{m:2,q:"What backup guideline is specifically recommended for Android devices handling enterprise data?",o:["Avoid backing up sensitive enterprise data to the personal Google account cloud backup","Always back up everything to the default Google account","Disable all backups on Android devices","Only back up data over cellular networks, never Wi-Fi"],e:"This prevents enterprise data from ending up in an uncontrolled personal cloud backup."},
+{m:2,q:"What does Malwarebytes Security provide for Android devices?",o:["Protection against malware and ransomware, privacy audits, and safer browsing","Enterprise-grade real-time mobile threat defense only","iOS-exclusive antivirus protection","A wireless intrusion prevention system for corporate Wi-Fi"],e:"It blocks, detects, and removes adware and malware."},
+{m:2,q:"What does Lookout Personal offer?",o:["Protection against malware, phishing, and device theft, with backup and monitoring features","A tool exclusively for enterprise MDM deployment","A tool for jamming wireless signals","A tool for cracking Wi-Fi passwords"],e:"Lookout Personal is aimed at individual users rather than enterprise fleets."},
+{m:2,q:"What is Zimperium's zIPS designed for?",o:["Enterprise-grade mobile threat defense that detects and prevents advanced attacks in real time","Personal photo backup and storage","Simple antivirus scanning for Android only","Bluetooth device pairing management"],e:"It targets advanced, real-time mobile threats at an enterprise scale."},
+{m:2,q:"What features does BullGuard Mobile Security provide?",o:["Antivirus, antitheft, and backup features for Android devices","iOS-exclusive parental controls","Enterprise MDM deployment only","Wireless intrusion detection for corporate networks"],e:"BullGuard is described specifically as an Android-focused mobile protection tool."},
+{m:2,q:"What does Norton Security for iOS protect against?",o:["Phishing, unsafe Wi-Fi networks, and online threats","Physical device damage","SIM card cloning only","Bluetooth pairing attacks only"],e:"It's tailored to iOS devices specifically."},
+{m:2,q:"What does Comodo Mobile Security offer?",o:["Antivirus protection, privacy protection, and real-time threat detection","Only a password manager","Only a Wi-Fi speed test tool","Only a device locator service"],e:"It's described as a comprehensive mobile security solution."}
+
+];
+
+/* ======================= state ======================= */
+const $ = id => document.getElementById(id);
+let deck = [], idx = 0, score = 0, answered = false, missed = [];
+
+/* ======================= theme ======================= */
+const SUN = '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/>';
+const MOON = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+function setTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  $("themeIcon").innerHTML = t === "dark" ? SUN : MOON;
+  $("themeBtn").setAttribute("aria-label", t === "dark" ? "Switch to light mode" : "Switch to dark mode");
+}
+$("themeBtn").addEventListener("click", () => {
+  const t = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  setTheme(t);
+  try{ localStorage.setItem("reviewerTheme", t); }catch(e){}
+});
+let savedTheme = null;
+try{ savedTheme = localStorage.getItem("reviewerTheme"); }catch(e){}
+setTheme(savedTheme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+
+/* ======================= helpers ======================= */
+function shuffle(a){
+  const r = a.slice();
+  for(let i = r.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [r[i], r[j]] = [r[j], r[i]];
+  }
+  return r;
+}
+function show(name){
+  ["startScreen","quizScreen","resultScreen"].forEach(s => $(s).classList.add("hide"));
+  $(name).classList.remove("hide");
+  $("keyHint").classList.toggle("hide", name !== "quizScreen");
+}
+
+/* ======================= start ======================= */
+$("cAll").textContent = BANK.length;
+$("c1").textContent = BANK.filter(q => q.m === 1).length;
+$("c2").textContent = BANK.filter(q => q.m === 2).length;
+
+document.querySelectorAll(".deck-btn").forEach(b => {
+  b.addEventListener("click", () => {
+    const mod = b.dataset.mod;
+    const pool = mod === "all" ? BANK.slice() : BANK.filter(q => q.m === Number(mod));
+    begin(pool);
+  });
+});
+
+function begin(pool){
+  deck = $("shuffleBox").checked ? shuffle(pool) : pool.slice();
+  idx = 0; score = 0; missed = [];
+  $("qTotal").textContent = deck.length;
+  show("quizScreen");
+  render();
+}
+
+/* ======================= question ======================= */
+function render(){
+  answered = false;
+  const q = deck[idx];
+  $("qNow").textContent = idx + 1;
+  $("score").textContent = score;
+  $("railFill").style.width = (idx / deck.length * 100) + "%";
+  $("modBadge").textContent = q.m === 1 ? "Wireless Attacks" : "Mobile Attacks";
+  $("qText").textContent = q.q;
+  $("fbSlot").innerHTML = "";
+  $("nextRow").classList.add("hide");
+  $("nextBtn").textContent = idx === deck.length - 1 ? "See your results" : "Next question";
+
+  const order = shuffle([0,1,2,3]);
+  const box = $("choices");
+  box.innerHTML = "";
+  order.forEach((orig, pos) => {
+    const btn = document.createElement("button");
+    btn.className = "choice";
+    btn.dataset.correct = (orig === 0) ? "1" : "0";
+    btn.innerHTML = '<span class="key">' + "ABCD"[pos] + '</span><span>' + escapeHTML(q.o[orig]) + '</span>';
+    btn.addEventListener("click", () => answer(btn));
+    box.appendChild(btn);
+  });
+}
+function escapeHTML(s){
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+/* ======================= answering ======================= */
+function answer(btn){
+  if(answered) return;
+  answered = true;
+  const q = deck[idx];
+  const right = btn.dataset.correct === "1";
+  const all = [...$("choices").children];
+
+  all.forEach(b => {
+    b.disabled = true;
+    if(b.dataset.correct === "1") b.classList.add("correct");
+    else if(b === btn) b.classList.add("wrong");
+    else b.classList.add("dim");
+  });
+
+  if(right){
+    score++;
+    $("score").textContent = score;
+  } else {
+    missed.push({
+      q: q.q,
+      yours: btn.textContent.slice(1).trim(),
+      right: q.o[0],
+      e: q.e,
+      ref: q
+    });
+  }
+
+  const fb = document.createElement("div");
+  fb.className = "fb " + (right ? "good" : "bad");
+  fb.innerHTML = "<strong>" + (right ? "Correct" : "The answer is: " + escapeHTML(q.o[0])) + "</strong>" + escapeHTML(q.e);
+  $("fbSlot").appendChild(fb);
+
+  $("nextRow").classList.remove("hide");
+  $("nextBtn").focus({preventScroll:true});
+}
+
+$("nextBtn").addEventListener("click", () => {
+  if(idx === deck.length - 1) finish();
+  else { idx++; render(); }
+});
+
+/* ======================= results ======================= */
+function finish(){
+  const total = deck.length;
+  const pct = Math.round(score / total * 100);
+  $("finalScore").textContent = score;
+  $("finalOf").textContent = " / " + total;
+
+  let msg;
+  if(pct === 100) msg = "Perfect run. Nothing left to review here.";
+  else if(pct >= 85) msg = "Solid — " + pct + "% right. Just tighten up the few below.";
+  else if(pct >= 65) msg = pct + "% right. Worth another pass over the ones you missed.";
+  else msg = pct + "% right. Read back through the handout, then run this again.";
+  $("verdict").textContent = msg;
+
+  $("retryMissed").classList.toggle("hide", missed.length === 0);
+  $("missedWrap").classList.toggle("hide", missed.length === 0);
+  $("missedTitle").textContent = "What to go back over (" + missed.length + ")";
+  if(missed.length){
+    $("retryMissed").textContent = "Retry the " + missed.length + " you missed";
+    $("missedList").innerHTML = missed.map(m =>
+      '<div class="miss"><p>' + escapeHTML(m.q) + '</p>' +
+      '<span class="yours">You picked: ' + escapeHTML(m.yours) + '</span>' +
+      '<span class="right">Correct: ' + escapeHTML(m.right) + '</span></div>'
+    ).join("");
+  }
+  show("resultScreen");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+$("retryMissed").addEventListener("click", () => begin(missed.map(m => m.ref)));
+$("restartBtn").addEventListener("click", () => show("startScreen"));
+
+/* ======================= keyboard ======================= */
+document.addEventListener("keydown", e => {
+  if($("quizScreen").classList.contains("hide")) return;
+  if(e.key === "Enter" && answered){ e.preventDefault(); $("nextBtn").click(); return; }
+  const n = "1234".indexOf(e.key);
+  const l = "abcd".indexOf(e.key.toLowerCase());
+  const pick = n > -1 ? n : l;
+  if(pick > -1 && !answered){
+    const b = $("choices").children[pick];
+    if(b) b.click();
+  }
+});
+
+show("startScreen");
+</script>
+</body>
+</html>
